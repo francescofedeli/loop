@@ -61,8 +61,8 @@ export function avvia(contenitore) {
   aggiungi(conFessure(lastra(S - 2 * T - .02, S, giallo), "y"), [0, S / 2 - T / 2, 0], [-Math.PI / 2, 0, 0], .74, "coperchio");
   aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, S / 2 - RIENTRO - .15], [0, 0, 0], .38, "cornice");
   aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, -S / 2 + RIENTRO + .15], [0, Math.PI, 0], .44, "cornice");
-  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W + .6, .12), ferro), [0, 0, S / 2 - RIENTRO + .08], [0, 0, 0], .86, "cornice-ferro");
-  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W + .6, .12), ferro), [0, 0, -S / 2 + RIENTRO - .08], [0, Math.PI, 0], .92, "cornice-ferro");
+  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W, .12), ferro), [0, 0, S / 2 - RIENTRO + .08], [0, 0, 0], .86, "cornice-ferro");
+  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W, .12), ferro), [0, 0, -S / 2 + RIENTRO - .08], [0, Math.PI, 0], .92, "cornice-ferro");
 
   // bioplastica: compare tra cornice e cornice in ferro
   const tex = new THREE.TextureLoader().load("tex/marmo.webp", () => render());
