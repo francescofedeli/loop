@@ -28,7 +28,22 @@ Lo stato del lavoro (fatto / da fare / decisioni) è in [PROGETTO.md](PROGETTO.m
 - **Il prodotto viene prima**: la lampada è un oggetto di design ed è protagonista; le ricette sono una sezione secondaria ma presente.
 - Testi in italiano.
 
+- **Il giallo (#f3c300) è il colore guida**; font Lemon Milk (titoli, solo maiuscole) + Garet.
+- **Il 3D sta in una pagina dedicata** (`sito/lampada.html`), non nella home.
+
 ## Struttura cartelle
 
+- `sito/` — il sito (versione di riferimento): `index.html`, `lampada.html`, `css/`, `js/`, `img/`, `tex/`, `font/`
+- `prototipi/` — prototipo della lampada 3D (le modifiche al 3D vanno fatte in `sito/lampada.html`)
 - `immagini/` — materiale grezzo fornito dall'utente (screenshot, foto)
 - `mockup/` — primo mockup statico (scartato, tenuto come riferimento)
+- `tesi-2026-def/` — materiale della tesi, **escluso da git** (troppo pesante)
+
+## Come vedere il sito in locale
+
+```
+python3 -m http.server 8765
+```
+poi http://localhost:8765/sito/index.html (serve il server, non il doppio clic).
+
+Per controllare le pagine si può usare Playwright (non è nel progetto: installarlo in una cartella temporanea).

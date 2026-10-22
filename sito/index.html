@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOOP — Il kit per creare la tua lampada con le bioplastiche</title>
+<meta name="description" content="LOOP è un kit educativo per creare una lampada con bioplastiche fatte a mano. Progetto di tesi in Design di Atena Tomasetti, LABA Rimini 2026.">
+<meta name="theme-color" content="#f3c300">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="preload" href="font/LemonMilk-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="font/Garet-Book.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- logo LOOP (estratto dall'abstract della tesi), riusato in tutta la pagina -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="233.12 45.13 129.04 131.47">
+    <g fill="currentColor" fill-rule="evenodd">
+      <path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/>
+      <path d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.180 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/>
+      <path d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.350C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/>
+      <path d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.050L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<header class="header" id="header">
+  <div class="wrap">
+    <a href="#top" class="logo-link" aria-label="LOOP, torna all'inizio"><svg viewBox="0 0 129.04 131.47"><use href="#logo"/></svg></a>
+    <nav class="nav" id="nav" aria-label="Principale">
+      <a href="#lampada">Lampada</a>
+      <a href="#kit">Kit</a>
+      <a href="#bioplastica">Bioplastica</a>
+      <a href="#ricette">Ricette</a>
+      <a href="#progetto">Progetto</a>
+      <a href="lampada.html" class="btn giallo">Scopri in 3D</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Apri il menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-testo">
+      <svg class="hero-logo" viewBox="233.12 45.13 129.04 131.47" role="img" aria-label="LOOP">
+        <g fill="currentColor" fill-rule="evenodd">
+          <g class="lettera"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g>
+          <path class="lettera" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/>
+          <path class="lettera" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/>
+          <path class="lettera" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/>
+        </g>
+      </svg>
+      <h1>Il kit per creare la tua lampada con le bioplastiche</h1>
+      <p class="firma">Dentro c'è la struttura della lampada e tutto il necessario per fare la tua bioplastica, con ingredienti che trovi in cucina.</p>
+      <div class="hero-azioni">
+        <a href="#lampada" class="btn">Scopri LOOP <span class="freccia">→</span></a>
+        <a href="lampada.html" class="btn vuoto">Prova la lampada in 3D</a>
+      </div>
+    </div>
+    <div class="hero-foto">
+      <img src="img/hero.webp" width="2000" height="1460" alt="La lampada LOOP accesa, con una bioplastica gialla a pois rossi che proietta luce rosa sul muro" fetchpriority="high">
+    </div>
+    <a href="#manifesto" class="hero-scroll" aria-label="Scorri"><i></i></a>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="sezione scura manifesto" id="manifesto">
+    <div class="wrap">
+      <p class="rivela">Il design non serve solo a creare oggetti. Serve ad avvicinare le persone ai temi che contano: <span class="evidenzia">come la sostenibilità.</span></p>
+      <div class="sotto rivela">
+        <p>LOOP nasce dalla voglia di unire design, scienza e creatività in un kit pensato per bambini e ragazzi: si fa la bioplastica con le proprie mani, la si monta nella lampada e la si accende.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LA LAMPADA -->
+  <section class="sezione" id="lampada">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">La lampada</p>
+        <h2 class="display h2 rivela">Un cubo di luce, 12 cm per lato</h2>
+        <p class="lead muto rivela">La struttura non deve competere con la bioplastica: il suo compito è farla vedere, illuminarla, valorizzarla. Per questo è la forma più semplice possibile.</p>
+      </div>
+
+      <div class="prodotto-grid">
+        <div class="foto-cornice rivela" style="aspect-ratio: 1400 / 1184">
+          <img src="img/lampada-pois-chiaro.webp" width="1400" height="1184" loading="lazy" alt="Lampada LOOP in alluminio con bioplastica gialla e rossa, su fondo chiaro">
+        </div>
+        <ul class="punti rivela">
+          <li><span class="num">01</span><div><h3>Si monta a incastro</h3><p>Lastre in alluminio tagliate al laser, senza viti né attrezzi. Arrivano piatte nella scatola e si montano a mano.</p></div></li>
+          <li><span class="num">02</span><div><h3>Base in ferro, luce magnetica</h3><p>La lampadina ha una base magnetica: si appoggia sulla base in ferro e resta ferma da sola. Si comanda con il telecomando.</p></div></li>
+          <li><span class="num">03</span><div><h3>La bioplastica si cambia in un gesto</h3><p>Due lati sono cornici con calamite: la bioplastica si appoggia sopra e una cornice in ferro la tiene ferma. Basta sollevarla per cambiarla.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="esploso rivela" aria-label="Vista esplosa della lampada">
+        <img src="img/esploso.webp" width="1400" height="933" loading="lazy" alt="Vista esplosa della lampada LOOP: struttura in alluminio, base, cornici e due bioplastiche colorate">
+        <div class="quote">
+          <span class="quota" style="left: 10%; top: 12%">Bioplastica</span>
+          <span class="quota" style="left: 40%; top: 4%">Coperchio in alluminio</span>
+          <span class="quota" style="right: 6%; top: 16%">Cornice in ferro</span>
+          <span class="quota" style="left: 30%; bottom: 6%">Base in ferro</span>
+          <span class="quota" style="right: 14%; bottom: 14%">Cornice con calamite</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DUE LATI, DUE LUCI -->
+  <section class="sezione scura">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Due lati, due luci</p>
+        <h2 class="display h2 rivela">La stessa luce, due esperienze</h2>
+        <p class="lead rivela" style="color:#bdb7ab">Girando la lampada scegli quale lato tenere davanti a te e quale rivolgere verso la stanza.</p>
+      </div>
+      <div class="due-luci">
+        <figure class="rivela">
+          <img src="img/lampada-rossa.webp" width="1200" height="1340" loading="lazy" alt="Bioplastica rossa retroilluminata vista di fronte">
+          <figcaption><span class="num">Davanti</span><p class="display h3">La bioplastica in controluce</p><p>La luce la attraversa e ne rivela colore, texture, bolle d'aria e venature dei coloranti naturali.</p></figcaption>
+        </figure>
+        <figure class="rivela">
+          <img src="img/lampada-cielo.webp" width="1400" height="1258" loading="lazy" alt="Lampada LOOP accesa che proietta luce arancione sul muro dietro">
+          <figcaption><span class="num">Dietro</span><p class="display h3">Il riflesso sulla stanza</p><p>Dall'altro lato la luce colorata tinge il muro e le superfici intorno, senza che la fonte si veda.</p></figcaption>
+        </figure>
+      </div>
+      <div class="cta-3d"><a href="lampada.html" class="btn giallo">Girala tu, in 3D <span class="freccia">→</span></a></div>
+    </div>
+  </section>
+
+  <!-- COLORI -->
+  <section class="sezione">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Cinque colori</p>
+        <h2 class="display h2 rivela">Pop industriale</h2>
+        <p class="lead muto rivela">Le soluzioni costruttive restano a vista e il montaggio diventa parte dell'estetica. La struttura è verniciata a polvere in cinque varianti.</p>
+      </div>
+      <div class="colori rivela">
+        <figure class="colore preferito"><div class="fondo"><img src="img/colore-giallo.webp" width="700" height="525" loading="lazy" alt="Struttura LOOP gialla"></div><p>Giallo</p></figure>
+        <figure class="colore"><div class="fondo"><img src="img/colore-alluminio.webp" width="700" height="525" loading="lazy" alt="Struttura LOOP in alluminio"></div><p>Alluminio</p></figure>
+        <figure class="colore"><div class="fondo"><img src="img/colore-arancione.webp" width="700" height="525" loading="lazy" alt="Struttura LOOP arancione"></div><p>Arancione</p></figure>
+        <figure class="colore"><div class="fondo"><img src="img/colore-bianco.webp" width="700" height="525" loading="lazy" alt="Struttura LOOP bianca"></div><p>Bianco</p></figure>
+        <figure class="colore"><div class="fondo"><img src="img/colore-nero.webp" width="700" height="525" loading="lazy" alt="Struttura LOOP nera"></div><p>Nero</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- OGNI LAMPADA È UNICA -->
+  <section class="sezione gialla" style="padding-bottom: clamp(56px, 8vw, 100px)">
+    <div class="wrap">
+      <div class="intesta" style="margin-bottom: 40px">
+        <p class="etichetta">Impilabili, modulari, uniche</p>
+        <h2 class="display h2 rivela">Sei tu a scegliere colore e fantasia</h2>
+      </div>
+    </div>
+    <div class="galleria" tabindex="0" aria-label="Galleria di lampade accese">
+      <figure><img src="img/lampada-pois-rosa.webp" width="1400" height="1400" loading="lazy" alt="Lampada con bioplastica a pois, luce rosa sul muro"></figure>
+      <figure><img src="img/lampada-magenta.webp" width="1400" height="1226" loading="lazy" alt="Lampada con bioplastica magenta"></figure>
+      <figure><img src="img/lampada-corallo.webp" width="1400" height="1540" loading="lazy" alt="Lampada con bioplastica corallo e verde acqua"></figure>
+      <figure><img src="img/lampada-pois-luce.webp" width="1400" height="1173" loading="lazy" alt="Lampada con bioplastica gialla a pois su fondo chiaro"></figure>
+      <figure><img src="img/lampada-cielo.webp" width="1400" height="1258" loading="lazy" alt="Lampada con bioplastica azzurra e gialla"></figure>
+    </div>
+  </section>
+
+  <!-- IL KIT: la scatola si apre allo scroll -->
+  <section class="kit" id="kit" aria-label="Il kit LOOP">
+    <div class="kit-pin">
+      <div class="kit-didascalie">
+        <div class="kit-didascalia"><span class="etichetta">01 — Il kit</span><p class="display h2">Apri la scatola</p></div>
+        <div class="kit-didascalia"><span class="etichetta">02 — Ingredienti</span><p class="display h2">Tutto per la bioplastica</p></div>
+        <div class="kit-didascalia"><span class="etichetta">03 — Struttura</span><p class="display h2">Otto lastre piatte</p></div>
+        <div class="kit-didascalia"><span class="etichetta">04 — Montala</span><p class="display h2">Ed ecco la tua lampada</p></div>
+      </div>
+
+      <div class="kit-scena" id="kit-scena">
+        <div class="scatola"><div class="fondo-scatola"></div></div>
+
+        <!-- lastre della struttura: sotto a tutto, escono per ultime -->
+        <div class="ogg lastra fessure"  data-p="50,52" data-d="8,70"  data-pm="50,50" data-dm="15,54"><div class="forma"></div></div>
+        <div class="ogg lastra fessure"  data-p="50.4,52.3" data-d="20,70" data-pm="50.4,50.3" data-dm="38,54"><div class="forma"></div></div>
+        <div class="ogg lastra cornice magneti" data-p="50.8,52.6" data-d="32,70" data-pm="50.8,50.6" data-dm="61,54"><div class="forma"></div></div>
+        <div class="ogg lastra cornice magneti" data-p="51.2,52.9" data-d="44,70" data-pm="51.2,50.9" data-dm="84,54"><div class="forma"></div></div>
+        <div class="ogg lastra fessure"  data-p="49.6,51.7" data-d="56,70" data-pm="49.6,49.7" data-dm="15,74"><div class="forma"></div></div>
+        <div class="ogg lastra ferro"    data-p="49.2,51.4" data-d="68,70" data-pm="49.2,49.4" data-dm="38,74"><div class="forma"></div></div>
+        <div class="ogg lastra ferro cornice" data-p="48.8,51.1" data-d="80,70" data-pm="48.8,49.1" data-dm="61,74"><div class="forma"></div></div>
+        <div class="ogg lastra ferro cornice" data-p="48.4,50.8" data-d="92,70" data-pm="48.4,48.8" data-dm="84,74"><div class="forma"></div></div>
+
+        <div class="ogg libretto" data-p="55,62" data-d="85,24" data-pm="50,62" data-dm="78,32"><div class="forma"><svg viewBox="0 0 129.04 131.47"><use href="#logo"/></svg></div><p class="nome">Libretto<small>istruzioni</small></p></div>
+
+        <div class="ogg barattolo grande" data-p="31,38" data-d="8,24"  data-pm="38,29" data-dm="15,13"><div class="forma"></div><p class="nome">Pectina</p></div>
+        <div class="ogg barattolo grande" data-p="31,63" data-d="20,24" data-pm="62,29" data-dm="37,13"><div class="forma"></div><p class="nome">Glicerina</p></div>
+        <div class="ogg barattolo piccolo" style="--pigmento:#e8b10e" data-p="40,35" data-d="30,19" data-pm="35,42" data-dm="60,10"><div class="forma"></div></div>
+        <div class="ogg barattolo piccolo" style="--pigmento:#b3123a" data-p="40,49" data-d="37,19" data-pm="45,42" data-dm="72,10"><div class="forma"></div></div>
+        <div class="ogg barattolo piccolo" style="--pigmento:#2f7fd0" data-p="47,35" data-d="30,30" data-pm="55,42" data-dm="60,17"><div class="forma"></div></div>
+        <div class="ogg barattolo piccolo" style="--pigmento:#3f7d2a" data-p="47,49" data-d="37,30" data-pm="65,42" data-dm="72,17"><div class="forma"></div></div>
+        <div class="ogg telecomando" data-p="56,36" data-d="66,24" data-pm="50,52" data-dm="46,32"><div class="forma"><i style="background:#f3c300"></i><i style="background:#e8432b"></i><i style="background:#2f7fd0"></i><i style="background:#3f9d4a"></i><i style="background:#fff"></i></div><p class="nome">Telecomando</p></div>
+        <div class="ogg lampadina" data-p="67,52" data-d="50,24" data-pm="50,70" data-dm="16,32"><div class="forma"></div><p class="nome">Lampadina<small>magnetica</small></p></div>
+
+        <!-- etichette di gruppo: compaiono quando gli oggetti sono al loro posto -->
+        <p class="ogg ogg-solo nome-gruppo" data-d="33.5,41" data-dm="66,22.5"><span class="nome">4 coloranti naturali<small>curcuma, barbabietola, spirulina blu e verde</small></span></p>
+        <p class="ogg ogg-solo nome-gruppo lastre-nome" data-d="14,81" data-dm="26,62"><span class="nome">Lati in alluminio</span></p>
+        <p class="ogg ogg-solo nome-gruppo lastre-nome" data-d="38,81" data-dm="72,62"><span class="nome">Lati a cornice<small>con calamite</small></span></p>
+        <p class="ogg ogg-solo nome-gruppo lastre-nome" data-d="56,81" data-dm="15,82"><span class="nome">Coperchio</span></p>
+        <p class="ogg ogg-solo nome-gruppo lastre-nome" data-d="68,81" data-dm="38,82"><span class="nome">Base<small>in ferro</small></span></p>
+        <p class="ogg ogg-solo nome-gruppo lastre-nome" data-d="86,81" data-dm="72,82"><span class="nome">Cornici in ferro</span></p>
+
+        <div class="coperchio">
+          <div class="marchio"><svg viewBox="0 0 129.04 131.47"><use href="#logo"/></svg></div>
+          <p>Kit per creare la tua lampada con bioplastiche</p>
+        </div>
+
+        <div class="kit-lampada"><img src="img/cubo-giallo.webp" width="900" height="675" loading="lazy" alt="La lampada LOOP montata, struttura gialla"></div>
+        <div class="kit-finale"><a href="lampada.html" class="btn">Scoprila in 3D <span class="freccia">→</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LA BIOPLASTICA -->
+  <section class="sezione" id="bioplastica">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">La bioplastica</p>
+        <h2 class="display h2 rivela">Acqua, una base, un plastificante</h2>
+        <p class="lead muto rivela">Un materiale fatto con ingredienti naturali, che si cuoce in un pentolino, si cola in uno stampo e si lascia asciugare. Ho provato quattro basi diverse prima di scegliere quella giusta per il kit.</p>
+      </div>
+
+      <div class="basi rivela">
+        <article class="base"><span class="num">01</span><h3>Gelatina</h3><ul><li>Asciuga in circa 24 ore</li><li>Di origine animale</li><li>Odore acre</li></ul><p class="esito muto">Scartata</p></article>
+        <article class="base"><span class="num">02</span><h3>Agar-agar</h3><ul><li>Di origine vegetale</li><li>Asciuga in circa 24 ore</li><li>Si restringe molto</li></ul><p class="esito muto">Scartata</p></article>
+        <article class="base"><span class="num">03</span><h3>Amido di mais</h3><ul><li>Di origine vegetale</li><li>Fino a 3 giorni per asciugare</li><li>Si deforma</li></ul><p class="esito muto">Scartata</p></article>
+        <article class="base scelta"><span class="num">04</span><h3>Pectina</h3><ul><li>Di origine vegetale</li><li>Lucida e trasparente</li><li>Mantiene bene la forma</li></ul><p class="esito">Scelta per il kit ✓</p></article>
+      </div>
+
+      <div class="pigmenti rivela">
+        <div class="pigmento"><i style="background:#e8b10e"></i><div><b>Curcuma</b><span>per il giallo</span></div></div>
+        <div class="pigmento"><i style="background:#b3123a"></i><div><b>Barbabietola</b><span>per il rosso</span></div></div>
+        <div class="pigmento"><i style="background:#2f7fd0"></i><div><b>Spirulina blu</b><span>per il blu e i colori misti</span></div></div>
+        <div class="pigmento"><i style="background:#3f7d2a"></i><div><b>Spirulina verde</b><span>per il verde e la texture</span></div></div>
+      </div>
+      <p class="muto rivela" style="margin-top:32px; max-width:62ch">Niente coloranti in boccetta: una radice o un ortaggio che si trovano in cucina fanno capire, molto meglio di un'etichetta, da dove viene il colore.</p>
+    </div>
+  </section>
+
+  <!-- RICETTE -->
+  <section class="sezione carta2" id="ricette">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Le ricette</p>
+        <h2 class="display h2 rivela">Dal pentolino alla lampada</h2>
+        <p class="lead muto rivela">Le ricette a base di pectina che ho testato per il kit, con dosi, procedimento e quello che ho osservato.</p>
+      </div>
+
+      <div class="passi rivela">
+        <div class="passo"><span class="num">01</span><h3>Sciogli</h3><p>Sciogli la pectina nell'acqua mescolando con energia, per evitare i grumi.</p></div>
+        <div class="passo"><span class="num">02</span><h3>Colora</h3><p>Aggiungi il colorante naturale e la glicerina, che rende il materiale flessibile.</p></div>
+        <div class="passo"><span class="num">03</span><h3>Cuoci</h3><p>Cuoci a fuoco medio-basso, mescolando, finché il composto si addensa.</p></div>
+        <div class="passo"><span class="num">04</span><h3>Cola e aspetta</h3><p>Versa nello stampo e lascia asciugare circa 24 ore.</p></div>
+      </div>
+
+      <div class="ricette">
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-base.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica trasparente a base di pectina"><span class="tag">Base</span></div>
+          <div class="corpo">
+            <h3>Pectina trasparente</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li></ul>
+            <details><summary>Osservazioni</summary><p>Dopo 24 ore è asciutta, lucida e trasparente. Mescolando con più energia i grumi spariscono quasi del tutto. In una settimana il diametro passa da 8,8 a 8,2 cm: la pectina è la base più stabile.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-curcuma.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica gialla alla curcuma"><span class="tag">Giallo</span></div>
+          <div class="corpo">
+            <h3>Pectina e curcuma</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>1 pizzico</b></li><li>curcuma</li></ul>
+            <details><summary>Osservazioni</summary><p>Un giallo trasparente e luminoso, bellissimo in controluce. Più curcuma dà un giallo più scuro. Si può arrotolare e piegare e torna da sola alla sua forma.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-barbabietola.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica rossa alla barbabietola"><span class="tag">Rosso</span></div>
+          <div class="corpo">
+            <h3>Pectina e barbabietola</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>½ cucchiaino</b></li><li>barbabietola in polvere</li></ul>
+            <details><summary>Osservazioni</summary><p>Un rosso acceso e brillante che resta vivo anche dopo una settimana. Asciuga piatta, senza ritiri né curvature, ed è molto flessibile.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-spirulina.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica verde scuro alla spirulina"><span class="tag">Verde</span></div>
+          <div class="corpo">
+            <h3>Pectina e spirulina</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>½ cucchiaino</b></li><li>spirulina</li></ul>
+            <details><summary>Osservazioni</summary><p>Un verde intenso: in controluce si vedono i piccoli frammenti di spirulina, che danno una texture molto particolare. Si può stringere e piegare senza crepe.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-spirulina-blu.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica alla spirulina blu appena colato"><span class="tag">Azzurro</span></div>
+          <div class="corpo">
+            <h3>Pectina e spirulina blu</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>½ cucchiaino</b></li><li>spirulina blu</li></ul>
+            <details><summary>Osservazioni</summary><p>In cottura il blu sbiadisce e resta solo nei grumi al centro. Da sola non tiene il colore, ma mescolata agli altri pigmenti è perfetta per ottenere i colori secondari.</p></details>
+          </div>
+        </article>
+      </div>
+      <p class="ricette-nota muto">In tutto ho sperimentato più di 60 campioni tra gelatina, agar-agar, amido di mais e pectina. <!-- TODO: pagina con tutte le sperimentazioni della tesi --></p>
+    </div>
+  </section>
+
+  <!-- IL PROGETTO -->
+  <section class="sezione scura" id="progetto">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Il progetto</p>
+        <h2 class="display h2 rivela">Educare alla sostenibilità attraverso il design</h2>
+      </div>
+      <div class="progetto-grid">
+        <p class="citazione rivela">“Perché non unire il design alla creazione delle bioplastiche, trasformando questa esperienza in qualcosa che anche i più giovani possano vivere?”</p>
+        <div class="testo-lungo rivela" style="color:#d9d3c7">
+          <p>Sperimentando con le bioplastiche, tra ingredienti, ricette e trasformazioni inaspettate della materia, ho ritrovato una sensazione che pensavo appartenesse solo all'infanzia: la soddisfazione di creare qualcosa con le proprie mani. Mi sono tornati in mente i kit creativi con cui sono cresciuta, quelli per costruire, mescolare e assemblare.</p>
+          <p>Da qui è nato LOOP: un kit educativo che unisce design, scienza e creatività. Avvicina i più giovani al design attraverso la sperimentazione diretta con i materiali e li rende consapevoli dell'impatto della plastica, facendoli diventare protagonisti di una trasformazione responsabile.</p>
+          <p>La lampada non è un punto di arrivo, ma di partenza: un invito a continuare a sperimentare nuove ricette, nuovi colori, nuove possibilità.</p>
+          <dl class="scheda">
+            <dt>Tesi</dt><dd>Educare alla sostenibilità attraverso il design: sviluppo di un kit per la produzione di bioplastiche</dd>
+            <dt>Corso</dt><dd>Diploma accademico di I livello in Design</dd>
+            <dt>Scuola</dt><dd>LABA, Libera Accademia di Belle Arti, Rimini</dd>
+            <dt>Relatore</dt><dd>Prof. Carlo Rausa</dd>
+            <dt>Anno</dt><dd>2025/2026, sessione di giugno 2026</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="riferimenti">
+        <article class="rivela"><span class="num">Rif. 01</span><h3>Alum Studio</h3><p>Mobili in metallo con un sistema costruttivo a incastro, senza viti, preciso come un gesto progettato.</p></article>
+        <article class="rivela"><span class="num">Rif. 02</span><h3>FlatFlat, Aidan Reinhold</h3><p>Arredi in alluminio tagliato al laser che viaggiano piatti e si montano a mano: l'idea del flat packaging.</p></article>
+        <article class="rivela"><span class="num">Rif. 03</span><h3>Teenage Engineering</h3><p>Viti a vista e alluminio piegato: il modo in cui un oggetto è tenuto insieme diventa parte del suo aspetto.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHI SONO -->
+  <section class="sezione" id="chi-sono">
+    <div class="wrap chi">
+      <div class="ritratto rivela">Foto ritratto<br>da aggiungere</div>
+      <div class="rivela">
+        <p class="etichetta" style="margin-bottom:20px">Chi sono</p>
+        <h2 class="display h2">Ciao, sono Atena</h2>
+        <p class="lead" style="margin-top:24px">Ho studiato Design alla LABA di Rimini. LOOP è il mio progetto di tesi: volevo dimostrare che il design non serve solo a creare oggetti, ma anche a insegnare temi importanti come la sostenibilità.</p>
+        <div class="contatti">
+          <a class="btn" href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a>
+          <a class="btn vuoto" href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a>
+          <!-- TODO: email e link Instagram del profilo -->
+          <a class="btn vuoto" href="mailto:">Scrivimi</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <svg class="logo-grande" viewBox="0 0 129.04 131.47" role="img" aria-label="LOOP"><use href="#logo"/></svg>
+      <a href="lampada.html" class="btn">Scopri la lampada in 3D <span class="freccia">→</span></a>
+    </div>
+    <small>© 2026 Atena Tomasetti · Progetto di tesi, LABA Rimini</small>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
