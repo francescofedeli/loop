@@ -86,7 +86,9 @@ p, li, dd { text-wrap: pretty; }
 .velo-riga { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--nero); transform: scaleY(0); transform-origin: 50% 0; }
 .velo-centro { position: absolute; inset: 0; display: grid; place-items: center; }
 .velo-logo { width: clamp(140px, 20vw, 260px); color: var(--nero); overflow: visible; opacity: 0; }
-html:not(.intro-on) .velo-logo { width: 46px; padding: 12px; box-sizing: content-box; background: var(--giallo); }
+/* il logo sta su un quadrato giallo che interrompe la riga (intro: grande, cambio pagina: piccolo) */
+.velo-logo { padding: clamp(18px, 2.4vw, 32px); box-sizing: content-box; background: var(--giallo); position: relative; }
+html:not(.intro-on) .velo-logo { width: 46px; padding: 12px; }
 html.velo-arrivo .velo-logo { opacity: 1; }
 .velo-logo .lettera { transform-box: fill-box; transform-origin: center; }
 .velo-salta { position: absolute; right: 24px; bottom: 20px; font-weight: 800; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .6; pointer-events: auto; }

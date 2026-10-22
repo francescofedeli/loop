@@ -21,12 +21,14 @@
   function apriVelo(ritardo = 0) {
     // resta visibile per tutta l'apertura (la classe che lo mostrava viene tolta qui)
     velo.style.visibility = "visible";
+    // l'opacità del logo va letta prima di togliere la classe che lo mostra, altrimenti sparisce di colpo
+    const opacitaLogo = getComputedStyle(logoVelo).opacity;
     anima(riga, [{ transform: "scaleY(1)" }, { transform: "scaleY(1)" }], { duration: 1 });
+    anima(logoVelo, [{ opacity: opacitaLogo, transform: "none" }, { opacity: 0, transform: "scale(.85)" }], { duration: 650, delay: ritardo, easing: "cubic-bezier(.4, 0, .2, 1)" });
     root.classList.remove("velo-arrivo");
-    anima(logoVelo, [{ opacity: getComputedStyle(logoVelo).opacity }, { opacity: 0, transform: "scale(.9)" }], { duration: 400, delay: ritardo });
-    anima(riga, [{ transform: "scaleY(1)", opacity: 1 }, { transform: "scaleY(1)", opacity: 0 }], { duration: 300, delay: ritardo + 150 });
-    anima(sx, [{ transform: "none" }, { transform: "translateX(-101%)" }], { ...APRI, delay: ritardo + 150 });
-    return anima(dx, [{ transform: "none" }, { transform: "translateX(101%)" }], { ...APRI, delay: ritardo + 150 }).then(() => {
+    anima(riga, [{ transform: "scaleY(1)", opacity: 1 }, { transform: "scaleY(1)", opacity: 0 }], { duration: 300, delay: ritardo + 300 });
+    anima(sx, [{ transform: "none" }, { transform: "translateX(-101%)" }], { ...APRI, delay: ritardo + 300 });
+    return anima(dx, [{ transform: "none" }, { transform: "translateX(101%)" }], { ...APRI, delay: ritardo + 300 }).then(() => {
       root.classList.remove("intro-on");
       velo.style.visibility = "hidden";
     });
