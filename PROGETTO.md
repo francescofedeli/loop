@@ -28,6 +28,7 @@ Sito interattivo, moderno e bello per presentare LOOP e chi l'ha progettato.
 - 2026-10-22 — Lampada 3D con Three.js costruita nel codice; scatola allo scroll con CSS/GSAP (non una seconda scena 3D) per restare leggeri.
 - 2026-10-22 — Ottimizzazione del 3D è un requisito fondamentale (vedi vincoli in CLAUDE.md).
 - 2026-10-22 — Codice sincronizzato tramite GitHub per lavorare da più computer.
+- 2026-10-22 — Font: **Lemon Milk** per logo e titoli, **Garet** per il resto (come nella tesi). Nessuno dei due è su Google Fonts: vanno inclusi come file .woff2. Verificare le licenze per uso web.
 
 ## Fatto
 
@@ -42,7 +43,8 @@ Sito interattivo, moderno e bello per presentare LOOP e chi l'ha progettato.
 - [ ] Misure del cubo
 - [ ] Foto frontali e piatte di 4–6 pannelli di bioplastica (per le texture 3D)
 - [ ] Foto scatola chiusa, aperta e dei singoli oggetti
-- [ ] Font / file del logo
+- [x] 2026-10-22 — Nome dei font (Lemon Milk + Garet)
+- [ ] File dei font (Lemon Milk, Garet) e file vettoriale del logo (SVG/PDF)
 - [ ] PDF della tesi
 - [ ] Ricette delle bioplastiche
 - [ ] Eventuali file 3D (.glb / .obj / .stl) dalla tesi
