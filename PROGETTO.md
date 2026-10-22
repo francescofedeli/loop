@@ -113,7 +113,8 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 
 ### Materiali che mancano
 - [ ] Foto ritratto per "Chi sono" (ora c'è un riquadro segnaposto)
-- [ ] Email e link al profilo Instagram (ora il link punta al post, l'email è vuota)
+- [x] 2026-10-23 — Email: atenatomasetti@gmail.com (in menu, footer e Chi sono)
+- [ ] Link al profilo Instagram (ora punta a un post)
 - [ ] Foto frontali e piatte delle bioplastiche per avere più texture nel 3D (ora 4, ritagliate dalle foto ufficio)
 - [ ] Foto definitive dei singoli pezzi della struttura (opzionale)
 
