@@ -157,7 +157,7 @@
 
   // la bioplastica è un quadrato messo in prospettiva sulla finestra della cornice (omografia → matrix3d)
   // angoli della finestra nel render (700 × 684): alto-sx, alto-dx, basso-dx, basso-sx
-  const FINESTRA = [[224, 179], [640, 129], [640, 562], [224, 650]];
+  const FINESTRA = [[225, 179], [626, 132], [605, 530], [234, 608]]; // calibrati a mano con ?calibra
   function omografia(w, h, q) {
     const src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], B = [];
     src.forEach(([u, v], i) => {
@@ -182,11 +182,53 @@
   function posaBio() {
     if (!bio || !cubo) return;
     const k = cubo.offsetWidth / 700;
-    const cx = 432, cy = 380, g = 1.012; // allarga dell'1,2% dal centro della finestra
+    const cx = 422, cy = 362, g = /calibra/.test(location.search) ? 1 : 1.012; // allarga dell'1,2% dal centro della finestra
     bio.style.transform = omografia(100, 100, FINESTRA.map(([x, y]) => [(cx + (x - cx) * g) * k, (cy + (y - cy) * g) * k]));
   }
   posaBio();
   addEventListener("resize", posaBio);
+
+  // strumento di calibrazione: index.html?calibra → quattro maniglie sugli angoli della bioplastica,
+  // si trascinano finché combacia con la cornice e si leggono i numeri da copiare in FINESTRA
+  if (bio && cubo && /calibra/.test(location.search)) {
+    const pannello = document.createElement("div");
+    pannello.style.cssText = "position:fixed;left:16px;bottom:16px;z-index:500;background:#121110;color:#f3c300;font:700 14px monospace;padding:12px 14px;max-width:calc(100vw - 32px)";
+    document.body.append(pannello);
+    const scrivi = () => pannello.innerHTML = "FINESTRA = " + JSON.stringify(FINESTRA) + '<br><small style="color:#f4f1ea;font-weight:400">trascina i quadratini, oppure clic su uno (diventa blu) e usa le frecce: 1 px, con Maiusc 5 px</small>';
+    const maniglie = FINESTRA.map((p, i) => {
+      const h = document.createElement("span"); h.className = "maniglia";
+      h.style.cssText = "position:absolute;z-index:20;width:6px;height:6px;margin:-3px 0 0 -3px;background:#e8432b;outline:1px solid #fff;cursor:grab;touch-action:none";
+      const metti = () => { h.style.left = FINESTRA[i][0] / 700 * 100 + "%"; h.style.top = FINESTRA[i][1] / 684 * 100 + "%"; };
+      metti();
+      h.addEventListener("pointerdown", e => { e.preventDefault(); h.setPointerCapture(e.pointerId); h.dataset.su = 1; scegli(i); });
+      h.addEventListener("pointermove", e => {
+        if (!h.dataset.su) return;
+        const r = cubo.getBoundingClientRect();
+        FINESTRA[i] = [Math.round((e.clientX - r.left) / r.width * 700), Math.round((e.clientY - r.top) / r.height * 684)];
+        metti(); posaBio(); scrivi();
+      });
+      h.addEventListener("pointerup", () => delete h.dataset.su);
+      cubo.append(h);
+      return h;
+    });
+    // regolazione fine: clic su un quadratino, poi frecce (1 px) o Maiusc + frecce (5 px)
+    let scelto = 0;
+    function scegli(i) { scelto = i; maniglie.forEach((m, k) => m.style.background = k === i ? "#2f7fd0" : "#e8432b"); }
+    addEventListener("keydown", e => {
+      const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+      if (!d) return;
+      e.preventDefault(); e.stopPropagation();
+      const passo = e.shiftKey ? 5 : 1;
+      FINESTRA[scelto] = [FINESTRA[scelto][0] + d[0] * passo, FINESTRA[scelto][1] + d[1] * passo];
+      const h = maniglie[scelto];
+      h.style.left = FINESTRA[scelto][0] / 700 * 100 + "%"; h.style.top = FINESTRA[scelto][1] / 684 * 100 + "%";
+      posaBio(); scrivi();
+    }, true);
+    setTimeout(() => scegli(0));
+    // la bioplastica resta sempre visibile mentre si calibra
+    addEventListener("load", () => setTimeout(() => { bio.querySelector("i").style.cssText = "transform:none!important"; posaBio(); }, 500));
+    scrivi();
+  }
 
   // divide un testo in parole (per le animazioni parola per parola)
   function dividi(el, classe) {
