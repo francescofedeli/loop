@@ -79,6 +79,8 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 - 2026-10-23 — **Cornici in rientranza** (come la lampada vera): nel 3D e nel montaggio del kit le cornici stanno dentro il cubo, arretrate di 7 mm dal bordo; lati, base e coperchio sono profondi tutto il cubo.
 - 2026-10-23 — Tolto il nastro di parole dalla home. Le foto della home (galleria e due luci) **si aprono a tutto schermo**. Cubo della sezione lampada ridimensionato sugli schermi bassi (portatili).
 - 2026-10-23 — Pagina progetto **senza i dettagli della tesi** (relatore, scheda, riferimenti): non serve scrivere tutto quello che c'è nella tesi. Anche il footer dice solo "Progetto di tesi in Design, LABA Rimini, 2026".
+- 2026-10-23 — 3D: con "Impila" attivo il pulsante "Montala" è disattivato.
+- 2026-10-23 — Kit, montaggio 3D: ~~pezzi che partono quasi insieme e si attraversano~~ → **un pezzo alla volta** come nel video (base, lampadina, cornici, bioplastica e cornici in ferro, lati, coperchio), ognuno si porta fuori dal cubo dal suo lato e poi scivola dentro.
 - 2026-10-22 — Il sito è statico (HTML/CSS/JS, niente build). GSAP e Three.js da CDN. Si potrà passare a Vite più avanti se serve.
 
 ## Fatto
@@ -117,6 +119,11 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 - [x] 2026-10-23 — Instagram: https://www.instagram.com/atena.tomasetti/
 - [ ] Foto frontali e piatte delle bioplastiche per avere più texture nel 3D (ora 4, ritagliate dalle foto ufficio)
 - [ ] Foto definitive dei singoli pezzi della struttura (opzionale)
+
+### Responsive (segnalato dall'utente il 2026-10-23, da fare più avanti)
+- [ ] Da telefono ci sono molte cose da sistemare (da rivedere pagina per pagina)
+- [ ] Anche su desktop piccolo (portatili) ci sono cose da sistemare
+- [ ] Da telefono, nella pagina 3D e nel 3D della pagina kit "c'è qualcosa sullo sfondo che cambia con la bioplastica": da capire con uno screenshot
 
 ### Sviluppo
 - [ ] Lampada 3D: transizioni morbide tra texture/colori, lampadina visibile dentro, sovrapposizione di due bioplastiche (idea dalla tesi p. 172)

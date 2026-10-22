@@ -213,8 +213,8 @@
       const proxy = { p: 0 };
       tl.to(proxy, { p: 1, duration: 4.4, ease: "none", onUpdate: () => { pMontaggio = proxy.p; monta && monta(proxy.p); } }, 9.6);
       didascalia(8, 11.0);
-      didascalia(9, 13.1);
-      tl.to(finale, { autoAlpha: 1, duration: .4 }, 13.6)
+      didascalia(9, 13.5);
+      tl.to(finale, { autoAlpha: 1, duration: .4 }, 13.95)
         .to({}, { duration: .5 });
 
       return () => { tl.scrollTrigger && tl.scrollTrigger.kill(); tl.kill(); };

@@ -2,8 +2,9 @@
 // avvia(contenitore) restituisce una funzione monta(p) con p da 0 a 1:
 //   0 → 0.22  le otto lastre, impilate come nella scatola, si aprono sul piano (vista dall'alto)
 //   0.18 → 0.4  la camera scende di tre quarti
-//   0.3 → 0.8   base, lampadina (cade dall'alto),, cornici, lati, coperchio, cornici in ferro con la bioplastica
-//   0.82 → 1    la lampada si accende
+//   0.3 → 0.88  un pezzo alla volta, come nel video: base, lampadina (cade dall'alto), cornici,
+//               bioplastica e cornici in ferro, lati, coperchio
+//   0.89 → 1    la lampada si accende
 import * as THREE from "three";
 
 export function avvia(contenitore) {
@@ -49,20 +50,21 @@ export function avvia(contenitore) {
   // ogni pezzo nasce "in piedi" come una lastra nel piano XY (spessore lungo z), poi viene orientato
   const lastra = (w, h, mat) => new THREE.Mesh(new THREE.BoxGeometry(w, h, T), mat);
   const pezzi = [];
-  // finale: posizione e rotazione nel cubo; ordine: quando arriva nel montaggio (0..1 dentro la fase)
-  const aggiungi = (mesh, pos, rot, ordine, nome) => {
+  // fine: posizione e rotazione nel cubo; inizio: quando parte (valore di p);
+  // da: da che lato entra (il pezzo si porta lì, fuori dal cubo, e poi scivola al suo posto: niente pezzi che si attraversano)
+  const aggiungi = (mesh, pos, rot, inizio, nome, da) => {
     const fine = { p: new THREE.Vector3(...pos), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(...rot)) };
-    pezzi.push({ mesh, fine, ordine, nome });
+    pezzi.push({ mesh, fine, inizio, nome, da: new THREE.Vector3(...da) });
     scene.add(mesh);
   };
-  aggiungi(lastra(S - 2 * T - .02, S, ferro), [0, -S / 2 + T / 2, 0], [-Math.PI / 2, 0, 0], 0, "base");
-  aggiungi(conFessure(lastra(S, S, giallo), "x"), [S / 2 - T / 2, 0, 0], [0, Math.PI / 2, 0], .55, "lato");
-  aggiungi(conFessure(lastra(S, S, giallo), "x"), [-S / 2 + T / 2, 0, 0], [0, Math.PI / 2, 0], .62, "lato");
-  aggiungi(conFessure(lastra(S - 2 * T - .02, S, giallo), "y"), [0, S / 2 - T / 2, 0], [-Math.PI / 2, 0, 0], .74, "coperchio");
-  aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, S / 2 - RIENTRO - .15], [0, 0, 0], .38, "cornice");
-  aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, -S / 2 + RIENTRO + .15], [0, Math.PI, 0], .44, "cornice");
-  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W, .12), ferro), [0, 0, S / 2 - RIENTRO + .08], [0, 0, 0], .86, "cornice-ferro");
-  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W, .12), ferro), [0, 0, -S / 2 + RIENTRO - .08], [0, Math.PI, 0], .92, "cornice-ferro");
+  aggiungi(lastra(S - 2 * T - .02, S, ferro), [0, -S / 2 + T / 2, 0], [-Math.PI / 2, 0, 0], 0.3, "base", [0, 9, 0]);
+  aggiungi(conFessure(lastra(S, S, giallo), "x"), [S / 2 - T / 2, 0, 0], [0, Math.PI / 2, 0], 0.7, "lato", [16, 0, 0]);
+  aggiungi(conFessure(lastra(S, S, giallo), "x"), [-S / 2 + T / 2, 0, 0], [0, Math.PI / 2, 0], 0.76, "lato", [-16, 0, 0]);
+  aggiungi(conFessure(lastra(S - 2 * T - .02, S, giallo), "y"), [0, S / 2 - T / 2, 0], [-Math.PI / 2, 0, 0], 0.82, "coperchio", [0, 16, 0]);
+  aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, S / 2 - RIENTRO - .15], [0, 0, 0], 0.43, "cornice", [0, 0, 16]);
+  aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, -S / 2 + RIENTRO + .15], [0, Math.PI, 0], 0.49, "cornice", [0, 0, -16]);
+  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W, .12), ferro), [0, 0, S / 2 - RIENTRO + .08], [0, 0, 0], 0.585, "cornice-ferro", [0, 0, 16]);
+  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W, .12), ferro), [0, 0, -S / 2 + RIENTRO - .08], [0, Math.PI, 0], 0.645, "cornice-ferro", [0, 0, -16]);
 
   // bioplastica: compare tra cornice e cornice in ferro
   const tex = new THREE.TextureLoader().load("tex/marmo.webp", () => render());
@@ -116,7 +118,7 @@ export function avvia(contenitore) {
   // ---- camera: dall'alto (come la scatola) a tre quarti ----
   const camAlto = new THREE.Vector3(0, 125, .01), camFine = new THREE.Vector3(32, 22, 50);
   const guardaAlto = new THREE.Vector3(0, -S / 2, 0), guardaFine = new THREE.Vector3(0, -.5, 0);
-  const tmpV = new THREE.Vector3(), tmpG = new THREE.Vector3(), tmpQ = new THREE.Quaternion();
+  const tmpV = new THREE.Vector3(), tmpA = new THREE.Vector3(), tmpG = new THREE.Vector3(), tmpQ = new THREE.Quaternion();
   const liscio = t => t * t * (3 - 2 * t);
   const tra = (p, a, b) => THREE.MathUtils.clamp((p - a) / (b - a), 0, 1);
   let ultimoP = 0, distanza = 1;
@@ -138,34 +140,36 @@ export function avvia(contenitore) {
     camera.position.lerpVectors(camAlto, camFine, cam).multiplyScalar(distanza);
     tmpG.lerpVectors(guardaAlto, guardaFine, cam);
     camera.lookAt(tmpG);
-    // 3. montaggio: ogni pezzo si solleva dal piano e va al suo posto con un arco
+    // 3. montaggio, un pezzo alla volta: dal piano si porta fuori dal cubo dal suo lato (girandosi), poi scivola dentro
     pezzi.forEach(pz => {
       const a = liscio(THREE.MathUtils.clamp((apri - pz.ritardo) / .85, 0, 1));
-      const t0 = .3 + pz.ordine * .42, k = liscio(tra(p, t0, t0 + .1));
+      const k1 = liscio(tra(p, pz.inizio, pz.inizio + .035)), k2 = liscio(tra(p, pz.inizio + .03, pz.inizio + .06));
       tmpV.lerpVectors(pz.pila, pz.piano, a);
       tmpQ.copy(piatta);
-      if (k > 0) {
-        tmpV.lerp(pz.fine.p, k);
-        tmpV.y += Math.sin(Math.PI * k) * 7;
-        tmpQ.slerp(pz.fine.q, k);
+      if (k1 > 0) {
+        tmpA.copy(pz.fine.p).add(pz.da);          // il punto d'ingresso, fuori dal cubo
+        tmpV.lerp(tmpA, k1);
+        tmpV.y += Math.sin(Math.PI * k1) * 4;     // un piccolo arco mentre si solleva
+        tmpQ.slerp(pz.fine.q, k1);
+        if (k2 > 0) tmpV.lerp(pz.fine.p, k2);
       }
       pz.mesh.position.copy(tmpV);
       pz.mesh.quaternion.copy(tmpQ);
     });
     // la lampadina cade sulla base subito dopo la base
-    const l = tra(p, .4, .455);
+    const l = tra(p, .37, .42);
     lampadina.position.set(0, -S / 2 + T + (1 - l * l) * 26, 0);
-    lampadina.visible = p > .395;
-    // la bioplastica compare insieme alle cornici in ferro
-    bioMat.opacity = tra(p, .66, .72);
+    lampadina.visible = p > .365;
+    // la bioplastica si appoggia sulle cornici, prima delle cornici in ferro
+    bioMat.opacity = tra(p, .54, .58);
     // 4. si accende
-    const luce = liscio(tra(p, .82, .95));
+    const luce = liscio(tra(p, .89, .97));
     vetro.color.setHex(0xd9d6cf).lerp(new THREE.Color(0xfff6dc), luce);
     bioMat.color.setScalar(.55 + .45 * luce);
     alone.material.opacity = luce * .8;
     ambiente.intensity = 1.7 - luce * .3;
     // a lampada finita gira piano su se stessa
-    const giro = tra(p, .8, 1) * .9;
+    const giro = tra(p, .88, 1) * .9;
     scene.rotation.y = giro;
     render();
   }

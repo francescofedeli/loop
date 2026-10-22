@@ -51,7 +51,9 @@
   .ui button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
   .pill { font-family: "Lemon Milk"; font-size: 11px; letter-spacing: .12em; padding: 10px 16px; border-radius: 99px; background: rgba(255,255,255,.1); transition: background .2s; white-space: nowrap; }
   .pill:hover { background: rgba(255,255,255,.18); }
-  .ui .pill { height: auto; display: inline-block; } /* style.css usa .pill per l'header del sito */
+  .ui .pill { height: auto; display: inline-block; }
+  .pill:disabled { opacity: .3; cursor: not-allowed; }
+  .pill:disabled:hover { background: rgba(255,255,255,.1); } /* style.css usa .pill per l'header del sito */
   .pill[aria-pressed="true"] { background: #f3c300; color: #0b0a09; }
   .swatches { display: flex; gap: 8px; }
   .swatch { width: 34px; height: 34px; border-radius: 50%; background-size: cover; outline: 2px solid transparent; outline-offset: 2px; transition: outline-color .2s, transform .2s; }
@@ -452,6 +454,8 @@
   stackBtn.onclick = () => {
     const on = stackBtn.getAttribute("aria-pressed") !== "true";
     stackBtn.setAttribute("aria-pressed", on);
+    // con le lampade impilate il montaggio non si può fare
+    document.getElementById("monta").disabled = on;
     costruisci(on);
   };
 
