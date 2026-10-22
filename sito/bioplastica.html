@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bioplastica e ricette — LOOP</title>
+<meta name="description" content="Le quattro basi testate, i coloranti naturali e le ricette a base di pectina del kit LOOP.">
+<meta name="theme-color" content="#f3c300">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="preload" href="font/LemonMilk-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="font/Garet-Book.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<!-- transizioni: intro alla prima visita, velo chiuso se si arriva da un'altra pagina del sito -->
+<script>try { const r = document.documentElement, s = sessionStorage; if (s.getItem("loop-velo")) { r.classList.add("velo-arrivo"); s.removeItem("loop-velo"); } else if (!s.getItem("loop-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("intro-on"); } catch (e) {}</script>
+</head>
+<body>
+
+<!-- logo LOOP (estratto dall'abstract della tesi), riusato in tutta la pagina -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="233.12 45.13 129.04 131.47">
+    <g fill="currentColor" fill-rule="evenodd">
+      <path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/>
+      <path d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.180 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/>
+      <path d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.350C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/>
+      <path d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.050L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- VELO: la riga verticale che si apre (intro e cambio pagina) -->
+<div class="velo" id="velo" aria-hidden="true">
+  <div class="velo-meta sx"></div>
+  <div class="velo-meta dx"></div>
+  <div class="velo-riga"></div>
+  <div class="velo-centro"><svg class="velo-logo" viewBox="233.12 45.13 129.04 131.47" ><g fill="currentColor" fill-rule="evenodd"><g class="lettera" style="--r:-24deg"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" style="--r:18deg" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" style="--r:-14deg" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" style="--r:26deg" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></div>
+  <button class="velo-salta" id="velo-salta" tabindex="-1">Salta</button>
+</div>
+
+<header class="barra" id="barra">
+  <a href="index.html" class="marchio" aria-label="LOOP, home"><svg class="" viewBox="233.12 45.13 129.04 131.47" aria-hidden="true"><g fill="currentColor" fill-rule="evenodd"><g class="lettera"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></a>
+  <div class="barra-destra">
+    <a href="lampada.html" class="pill pill-3d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5 21 7.5v9L12 21.5 3 16.5v-9z"/><path d="M3 7.5l9 5 9-5M12 12.5v9"/></svg><span>Scopri in 3D</span></a>
+    <button class="pill pill-menu" id="apri-menu" aria-expanded="false" aria-controls="menu"><span class="etichetta-menu"><span>Menu</span><span>Chiudi</span></span><span class="linee"><i></i><i></i></span></button>
+  </div>
+</header>
+
+<div class="menu" id="menu" aria-label="Menu" role="dialog" aria-modal="true">
+  <ul class="menu-voci"><li style="--i:0"><a class="menu-voce" href="index.html" data-img="0"><span class="n">01</span><span class="t"><span>Home</span><span aria-hidden="true">Home</span></span></a></li><li style="--i:1"><a class="menu-voce" href="index.html#lampada" data-img="1"><span class="n">02</span><span class="t"><span>La lampada</span><span aria-hidden="true">La lampada</span></span></a></li><li style="--i:2"><a class="menu-voce" href="kit.html" data-img="2"><span class="n">03</span><span class="t"><span>Il kit</span><span aria-hidden="true">Il kit</span></span></a></li><li style="--i:3"><a class="menu-voce" href="bioplastica.html" data-img="3" aria-current="page"><span class="n">04</span><span class="t"><span>Bioplastica e ricette</span><span aria-hidden="true">Bioplastica e ricette</span></span></a></li><li style="--i:4"><a class="menu-voce" href="progetto.html" data-img="4"><span class="n">05</span><span class="t"><span>Il progetto</span><span aria-hidden="true">Il progetto</span></span></a></li><li style="--i:5"><a class="menu-voce" href="lampada.html" data-img="5"><span class="n">06</span><span class="t"><span>Scopri in 3D</span><span aria-hidden="true">Scopri in 3D</span></span></a></li></ul>
+  <div class="menu-anteprima" aria-hidden="true"><img src="img/menu-lampada.webp" alt="" loading="lazy" data-i="0" class=on><img src="img/cubo-giallo.webp" alt="" loading="lazy" data-i="1" style="object-fit:contain;background:#f3c300"><img src="img/menu-kit.webp" alt="" loading="lazy" data-i="2"><img src="img/menu-bio.webp" alt="" loading="lazy" data-i="3"><img src="img/menu-progetto.webp" alt="" loading="lazy" data-i="4"><img src="img/hero-buio-tel.webp" alt="" loading="lazy" data-i="5"></div>
+  <div class="menu-piede">
+    <span>LOOP — kit educativo per creare la tua lampada con le bioplastiche</span>
+    <nav aria-label="Contatti"><a href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a><a href="mailto:">Scrivimi</a></nav>
+  </div>
+</div>
+
+<main id="top">
+  <section class="testa-pagina">
+    <div class="wrap">
+      <p class="etichetta trattino">Il materiale</p>
+      <h1 class="display h1 titolo-anim">Bioplastica e ricette</h1>
+      <p class="lead muto">Acqua, una base e un plastificante: un materiale che si cuoce in un pentolino, si cola in uno stampo e si lascia asciugare. Qui c'è tutto quello che ho provato prima di scegliere la ricetta del kit.</p>
+    </div>
+  </section>
+
+  <!-- LA BIOPLASTICA -->
+  <section class="sezione" id="bioplastica" style="padding-top:0">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">La bioplastica</p>
+        <h2 class="display h2 rivela">Acqua, una base, un plastificante</h2>
+        <p class="lead muto rivela">Un materiale fatto con ingredienti naturali, che si cuoce in un pentolino, si cola in uno stampo e si lascia asciugare. Ho provato quattro basi diverse prima di scegliere quella giusta per il kit.</p>
+      </div>
+
+      <div class="basi rivela">
+        <article class="base"><span class="num">01</span><h3>Gelatina</h3><ul><li>Asciuga in circa 24 ore</li><li>Di origine animale</li><li>Odore acre</li></ul><p class="esito muto">Scartata</p></article>
+        <article class="base"><span class="num">02</span><h3>Agar-agar</h3><ul><li>Di origine vegetale</li><li>Asciuga in circa 24 ore</li><li>Si restringe molto</li></ul><p class="esito muto">Scartata</p></article>
+        <article class="base"><span class="num">03</span><h3>Amido di mais</h3><ul><li>Di origine vegetale</li><li>Fino a 3 giorni per asciugare</li><li>Si deforma</li></ul><p class="esito muto">Scartata</p></article>
+        <article class="base scelta"><span class="num">04</span><h3>Pectina</h3><ul><li>Di origine vegetale</li><li>Lucida e trasparente</li><li>Mantiene bene la forma</li></ul><p class="esito">Scelta per il kit ✓</p></article>
+      </div>
+
+      <div class="pigmenti rivela">
+        <div class="pigmento"><i style="background:#e8b10e"></i><div><b>Curcuma</b><span>per il giallo</span></div></div>
+        <div class="pigmento"><i style="background:#b3123a"></i><div><b>Barbabietola</b><span>per il rosso</span></div></div>
+        <div class="pigmento"><i style="background:#2f7fd0"></i><div><b>Spirulina blu</b><span>per il blu e i colori misti</span></div></div>
+        <div class="pigmento"><i style="background:#3f7d2a"></i><div><b>Spirulina verde</b><span>per il verde e la texture</span></div></div>
+      </div>
+      <p class="muto rivela" style="margin-top:32px; max-width:62ch">Niente coloranti in boccetta: una radice o un ortaggio che si trovano in cucina fanno capire, molto meglio di un'etichetta, da dove viene il colore.</p>
+    </div>
+  </section>
+
+  <!-- RICETTE -->
+  <section class="sezione carta2" id="ricette">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Le ricette</p>
+        <h2 class="display h2 rivela">Dal pentolino alla lampada</h2>
+        <p class="lead muto rivela">Le ricette a base di pectina che ho testato per il kit, con dosi, procedimento e quello che ho osservato.</p>
+      </div>
+
+      <div class="passi rivela">
+        <div class="passo"><span class="num">01</span><h3>Sciogli</h3><p>Sciogli la pectina nell'acqua mescolando con energia, per evitare i grumi.</p></div>
+        <div class="passo"><span class="num">02</span><h3>Colora</h3><p>Aggiungi il colorante naturale e la glicerina, che rende il materiale flessibile.</p></div>
+        <div class="passo"><span class="num">03</span><h3>Cuoci</h3><p>Cuoci a fuoco medio-basso, mescolando, finché il composto si addensa.</p></div>
+        <div class="passo"><span class="num">04</span><h3>Cola e aspetta</h3><p>Versa nello stampo e lascia asciugare circa 24 ore.</p></div>
+      </div>
+
+      <div class="ricette">
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-base.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica trasparente a base di pectina"><span class="tag">Base</span></div>
+          <div class="corpo">
+            <h3>Pectina trasparente</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li></ul>
+            <details><summary>Osservazioni</summary><p>Dopo 24 ore è asciutta, lucida e trasparente. Mescolando con più energia i grumi spariscono quasi del tutto. In una settimana il diametro passa da 8,8 a 8,2 cm: la pectina è la base più stabile.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-curcuma.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica gialla alla curcuma"><span class="tag">Giallo</span></div>
+          <div class="corpo">
+            <h3>Pectina e curcuma</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>1 pizzico</b></li><li>curcuma</li></ul>
+            <details><summary>Osservazioni</summary><p>Un giallo trasparente e luminoso, bellissimo in controluce. Più curcuma dà un giallo più scuro. Si può arrotolare e piegare e torna da sola alla sua forma.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-barbabietola.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica rossa alla barbabietola"><span class="tag">Rosso</span></div>
+          <div class="corpo">
+            <h3>Pectina e barbabietola</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>½ cucchiaino</b></li><li>barbabietola in polvere</li></ul>
+            <details><summary>Osservazioni</summary><p>Un rosso acceso e brillante che resta vivo anche dopo una settimana. Asciuga piatta, senza ritiri né curvature, ed è molto flessibile.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-spirulina.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica verde scuro alla spirulina"><span class="tag">Verde</span></div>
+          <div class="corpo">
+            <h3>Pectina e spirulina</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>½ cucchiaino</b></li><li>spirulina</li></ul>
+            <details><summary>Osservazioni</summary><p>Un verde intenso: in controluce si vedono i piccoli frammenti di spirulina, che danno una texture molto particolare. Si può stringere e piegare senza crepe.</p></details>
+          </div>
+        </article>
+        <article class="ricetta rivela">
+          <div class="foto"><img src="img/ric-spirulina-blu.webp" width="700" height="700" loading="lazy" alt="Campione di bioplastica alla spirulina blu appena colato"><span class="tag">Azzurro</span></div>
+          <div class="corpo">
+            <h3>Pectina e spirulina blu</h3>
+            <ul class="dosi"><li><b>5 g</b></li><li>pectina</li><li><b>6 g</b></li><li>glicerina</li><li><b>43 ml</b></li><li>acqua</li><li><b>½ cucchiaino</b></li><li>spirulina blu</li></ul>
+            <details><summary>Osservazioni</summary><p>In cottura il blu sbiadisce e resta solo nei grumi al centro. Da sola non tiene il colore, ma mescolata agli altri pigmenti è perfetta per ottenere i colori secondari.</p></details>
+          </div>
+        </article>
+      </div>
+      <p class="ricette-nota muto">In tutto ho sperimentato più di 60 campioni tra gelatina, agar-agar, amido di mais e pectina. <!-- TODO: pagina con tutte le sperimentazioni della tesi --></p>
+    </div>
+  </section>
+
+  </main>
+
+<footer class="piede">
+  <div class="wrap piede-cta">
+    <p class="etichetta trattino">Pronta ad accendersi</p>
+    <p class="piede-grande">Gira la lampada,<br>accendi la luce</p>
+    <a href="lampada.html" class="piede-tondo" data-magnete>Scopri<br>in 3D<span>→</span></a>
+  </div>
+  <div class="wrap piede-griglia">
+    <div><h3>Pagine</h3><ul><li><a href="index.html#lampada">La lampada</a></li><li><a href="kit.html">Il kit</a></li><li><a href="bioplastica.html">Bioplastica e ricette</a></li><li><a href="progetto.html">Il progetto</a></li></ul></div>
+    <div><h3>Contatti</h3><ul><li><a href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:">Scrivimi</a></li></ul></div>
+    <div><h3>La tesi</h3><p>Educare alla sostenibilità attraverso il design. LABA Rimini, relatore Prof. Carlo Rausa, 2026.</p></div>
+    <button class="su" id="su" aria-label="Torna su">↑</button>
+  </div>
+  <div class="wrap piede-fondo"><span>© 2026 Atena Tomasetti</span><span>Fatto a mano, come la bioplastica</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

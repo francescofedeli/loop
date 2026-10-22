@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il progetto — LOOP</title>
+<meta name="description" content="La tesi dietro LOOP: educare alla sostenibilità attraverso il design. Atena Tomasetti, LABA Rimini 2026.">
+<meta name="theme-color" content="#f3c300">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="preload" href="font/LemonMilk-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="font/Garet-Book.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<!-- transizioni: intro alla prima visita, velo chiuso se si arriva da un'altra pagina del sito -->
+<script>try { const r = document.documentElement, s = sessionStorage; if (s.getItem("loop-velo")) { r.classList.add("velo-arrivo"); s.removeItem("loop-velo"); } else if (!s.getItem("loop-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("intro-on"); } catch (e) {}</script>
+</head>
+<body>
+
+<!-- logo LOOP (estratto dall'abstract della tesi), riusato in tutta la pagina -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="233.12 45.13 129.04 131.47">
+    <g fill="currentColor" fill-rule="evenodd">
+      <path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/>
+      <path d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.180 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/>
+      <path d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.350C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/>
+      <path d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.050L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- VELO: la riga verticale che si apre (intro e cambio pagina) -->
+<div class="velo" id="velo" aria-hidden="true">
+  <div class="velo-meta sx"></div>
+  <div class="velo-meta dx"></div>
+  <div class="velo-riga"></div>
+  <div class="velo-centro"><svg class="velo-logo" viewBox="233.12 45.13 129.04 131.47" ><g fill="currentColor" fill-rule="evenodd"><g class="lettera" style="--r:-24deg"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" style="--r:18deg" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" style="--r:-14deg" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" style="--r:26deg" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></div>
+  <button class="velo-salta" id="velo-salta" tabindex="-1">Salta</button>
+</div>
+
+<header class="barra" id="barra">
+  <a href="index.html" class="marchio" aria-label="LOOP, home"><svg class="" viewBox="233.12 45.13 129.04 131.47" aria-hidden="true"><g fill="currentColor" fill-rule="evenodd"><g class="lettera"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></a>
+  <div class="barra-destra">
+    <a href="lampada.html" class="pill pill-3d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5 21 7.5v9L12 21.5 3 16.5v-9z"/><path d="M3 7.5l9 5 9-5M12 12.5v9"/></svg><span>Scopri in 3D</span></a>
+    <button class="pill pill-menu" id="apri-menu" aria-expanded="false" aria-controls="menu"><span class="etichetta-menu"><span>Menu</span><span>Chiudi</span></span><span class="linee"><i></i><i></i></span></button>
+  </div>
+</header>
+
+<div class="menu" id="menu" aria-label="Menu" role="dialog" aria-modal="true">
+  <ul class="menu-voci"><li style="--i:0"><a class="menu-voce" href="index.html" data-img="0"><span class="n">01</span><span class="t"><span>Home</span><span aria-hidden="true">Home</span></span></a></li><li style="--i:1"><a class="menu-voce" href="index.html#lampada" data-img="1"><span class="n">02</span><span class="t"><span>La lampada</span><span aria-hidden="true">La lampada</span></span></a></li><li style="--i:2"><a class="menu-voce" href="kit.html" data-img="2"><span class="n">03</span><span class="t"><span>Il kit</span><span aria-hidden="true">Il kit</span></span></a></li><li style="--i:3"><a class="menu-voce" href="bioplastica.html" data-img="3"><span class="n">04</span><span class="t"><span>Bioplastica e ricette</span><span aria-hidden="true">Bioplastica e ricette</span></span></a></li><li style="--i:4"><a class="menu-voce" href="progetto.html" data-img="4" aria-current="page"><span class="n">05</span><span class="t"><span>Il progetto</span><span aria-hidden="true">Il progetto</span></span></a></li><li style="--i:5"><a class="menu-voce" href="lampada.html" data-img="5"><span class="n">06</span><span class="t"><span>Scopri in 3D</span><span aria-hidden="true">Scopri in 3D</span></span></a></li></ul>
+  <div class="menu-anteprima" aria-hidden="true"><img src="img/menu-lampada.webp" alt="" loading="lazy" data-i="0" class=on><img src="img/cubo-giallo.webp" alt="" loading="lazy" data-i="1" style="object-fit:contain;background:#f3c300"><img src="img/menu-kit.webp" alt="" loading="lazy" data-i="2"><img src="img/menu-bio.webp" alt="" loading="lazy" data-i="3"><img src="img/menu-progetto.webp" alt="" loading="lazy" data-i="4"><img src="img/hero-buio-tel.webp" alt="" loading="lazy" data-i="5"></div>
+  <div class="menu-piede">
+    <span>LOOP — kit educativo per creare la tua lampada con le bioplastiche</span>
+    <nav aria-label="Contatti"><a href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a><a href="mailto:">Scrivimi</a></nav>
+  </div>
+</div>
+
+<main id="top">
+  <section class="testa-pagina">
+    <div class="wrap">
+      <p class="etichetta trattino">La tesi</p>
+      <h1 class="display h1 titolo-anim">Il progetto</h1>
+      <p class="lead muto">Perché un kit, perché una lampada, perché le bioplastiche. E chi c'è dietro.</p>
+    </div>
+  </section>
+
+  <!-- IL PROGETTO -->
+  <section class="sezione scura" id="progetto">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Il progetto</p>
+        <h2 class="display h2 rivela">Educare alla sostenibilità attraverso il design</h2>
+      </div>
+      <div class="progetto-grid">
+        <p class="citazione rivela">“Perché non unire il design alla creazione delle bioplastiche, trasformando questa esperienza in qualcosa che anche i più giovani possano vivere?”</p>
+        <div class="testo-lungo rivela" style="color:#d9d3c7">
+          <p>Sperimentando con le bioplastiche, tra ingredienti, ricette e trasformazioni inaspettate della materia, ho ritrovato una sensazione che pensavo appartenesse solo all'infanzia: la soddisfazione di creare qualcosa con le proprie mani. Mi sono tornati in mente i kit creativi con cui sono cresciuta, quelli per costruire, mescolare e assemblare.</p>
+          <p>Da qui è nato LOOP: un kit educativo che unisce design, scienza e creatività. Avvicina i più giovani al design attraverso la sperimentazione diretta con i materiali e li rende consapevoli dell'impatto della plastica, facendoli diventare protagonisti di una trasformazione responsabile.</p>
+          <p>La lampada non è un punto di arrivo, ma di partenza: un invito a continuare a sperimentare nuove ricette, nuovi colori, nuove possibilità.</p>
+          <dl class="scheda">
+            <dt>Tesi</dt><dd>Educare alla sostenibilità attraverso il design: sviluppo di un kit per la produzione di bioplastiche</dd>
+            <dt>Corso</dt><dd>Diploma accademico di I livello in Design</dd>
+            <dt>Scuola</dt><dd>LABA, Libera Accademia di Belle Arti, Rimini</dd>
+            <dt>Relatore</dt><dd>Prof. Carlo Rausa</dd>
+            <dt>Anno</dt><dd>2025/2026, sessione di giugno 2026</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="riferimenti">
+        <article class="rivela"><span class="num">Rif. 01</span><h3>Alum Studio</h3><p>Mobili in metallo con un sistema costruttivo a incastro, senza viti, preciso come un gesto progettato.</p></article>
+        <article class="rivela"><span class="num">Rif. 02</span><h3>FlatFlat, Aidan Reinhold</h3><p>Arredi in alluminio tagliato al laser che viaggiano piatti e si montano a mano: l'idea del flat packaging.</p></article>
+        <article class="rivela"><span class="num">Rif. 03</span><h3>Teenage Engineering</h3><p>Viti a vista e alluminio piegato: il modo in cui un oggetto è tenuto insieme diventa parte del suo aspetto.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHI SONO -->
+  <section class="sezione" id="chi-sono">
+    <div class="wrap chi">
+      <div class="ritratto rivela">Foto ritratto<br>da aggiungere</div>
+      <div class="rivela">
+        <p class="etichetta" style="margin-bottom:20px">Chi sono</p>
+        <h2 class="display h2">Ciao, sono Atena</h2>
+        <p class="lead" style="margin-top:24px">Ho studiato Design alla LABA di Rimini. LOOP è il mio progetto di tesi: volevo dimostrare che il design non serve solo a creare oggetti, ma anche a insegnare temi importanti come la sostenibilità.</p>
+        <div class="contatti">
+          <a class="btn" href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a>
+          <a class="btn vuoto" href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a>
+          <!-- TODO: email e link Instagram del profilo -->
+          <a class="btn vuoto" href="mailto:">Scrivimi</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="piede">
+  <div class="wrap piede-cta">
+    <p class="etichetta trattino">Pronta ad accendersi</p>
+    <p class="piede-grande">Gira la lampada,<br>accendi la luce</p>
+    <a href="lampada.html" class="piede-tondo" data-magnete>Scopri<br>in 3D<span>→</span></a>
+  </div>
+  <div class="wrap piede-griglia">
+    <div><h3>Pagine</h3><ul><li><a href="index.html#lampada">La lampada</a></li><li><a href="kit.html">Il kit</a></li><li><a href="bioplastica.html">Bioplastica e ricette</a></li><li><a href="progetto.html">Il progetto</a></li></ul></div>
+    <div><h3>Contatti</h3><ul><li><a href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:">Scrivimi</a></li></ul></div>
+    <div><h3>La tesi</h3><p>Educare alla sostenibilità attraverso il design. LABA Rimini, relatore Prof. Carlo Rausa, 2026.</p></div>
+    <button class="su" id="su" aria-label="Torna su">↑</button>
+  </div>
+  <div class="wrap piede-fondo"><span>© 2026 Atena Tomasetti</span><span>Fatto a mano, come la bioplastica</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

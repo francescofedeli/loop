@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il kit — LOOP</title>
+<meta name="description" content="Apri la scatola del kit LOOP: tutto il necessario per fare la bioplastica in cucina e montare la tua lampada.">
+<meta name="theme-color" content="#f3c300">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="preload" href="font/LemonMilk-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="font/Garet-Book.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/kit.css">
+<!-- transizioni: intro alla prima visita, velo chiuso se si arriva da un'altra pagina del sito -->
+<script>try { const r = document.documentElement, s = sessionStorage; if (s.getItem("loop-velo")) { r.classList.add("velo-arrivo"); s.removeItem("loop-velo"); } else if (!s.getItem("loop-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("intro-on"); } catch (e) {}</script>
+</head>
+<body class="pagina-kit">
+
+<!-- logo LOOP (estratto dall'abstract della tesi), riusato in tutta la pagina -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="233.12 45.13 129.04 131.47">
+    <g fill="currentColor" fill-rule="evenodd">
+      <path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/>
+      <path d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.180 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/>
+      <path d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.350C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/>
+      <path d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.050L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- VELO: la riga verticale che si apre (intro e cambio pagina) -->
+<div class="velo" id="velo" aria-hidden="true">
+  <div class="velo-meta sx"></div>
+  <div class="velo-meta dx"></div>
+  <div class="velo-riga"></div>
+  <div class="velo-centro"><svg class="velo-logo" viewBox="233.12 45.13 129.04 131.47" ><g fill="currentColor" fill-rule="evenodd"><g class="lettera" style="--r:-24deg"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" style="--r:18deg" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" style="--r:-14deg" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" style="--r:26deg" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></div>
+  <button class="velo-salta" id="velo-salta" tabindex="-1">Salta</button>
+</div>
+
+<!-- sfumature dei materiali, usate dai disegni degli oggetti -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="k-bordo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6f6f4"/><stop offset=".35" stop-color="#a6a5a0"/><stop offset=".6" stop-color="#ebeae6"/><stop offset="1" stop-color="#8a8984"/></linearGradient>
+    <radialGradient id="k-coperchio" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#fdfdfc"/><stop offset=".55" stop-color="#d6d5d1"/><stop offset="1" stop-color="#aeada8"/></radialGradient>
+    <radialGradient id="k-vetro" cx=".3" cy=".28" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></radialGradient>
+    <radialGradient id="k-bulbo" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#efede8"/><stop offset="1" stop-color="#cfcbc2"/></radialGradient>
+    <radialGradient id="k-bulbo-acceso" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff5c8"/><stop offset="1" stop-color="#f7d454"/></radialGradient>
+    <linearGradient id="k-alu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eeede9"/><stop offset=".55" stop-color="#bdbcb7"/><stop offset="1" stop-color="#dad9d5"/></linearGradient>
+    <linearGradient id="k-ferro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a7872"/><stop offset=".6" stop-color="#4d4b47"/><stop offset="1" stop-color="#67655f"/></linearGradient>
+    <linearGradient id="k-plastica" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e2dc"/></linearGradient>
+  </defs>
+</svg>
+
+<header class="barra" id="barra">
+  <a href="index.html" class="marchio" aria-label="LOOP, home"><svg class="" viewBox="233.12 45.13 129.04 131.47" aria-hidden="true"><g fill="currentColor" fill-rule="evenodd"><g class="lettera"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></a>
+  <div class="barra-destra">
+    <a href="lampada.html" class="pill pill-3d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2.5 21 7.5v9L12 21.5 3 16.5v-9z"/><path d="M3 7.5l9 5 9-5M12 12.5v9"/></svg><span>Scopri in 3D</span></a>
+    <button class="pill pill-menu" id="apri-menu" aria-expanded="false" aria-controls="menu"><span class="etichetta-menu"><span>Menu</span><span>Chiudi</span></span><span class="linee"><i></i><i></i></span></button>
+  </div>
+</header>
+
+<div class="menu" id="menu" aria-label="Menu" role="dialog" aria-modal="true">
+  <ul class="menu-voci"><li style="--i:0"><a class="menu-voce" href="index.html" data-img="0"><span class="n">01</span><span class="t"><span>Home</span><span aria-hidden="true">Home</span></span></a></li><li style="--i:1"><a class="menu-voce" href="index.html#lampada" data-img="1"><span class="n">02</span><span class="t"><span>La lampada</span><span aria-hidden="true">La lampada</span></span></a></li><li style="--i:2"><a class="menu-voce" href="kit.html" data-img="2" aria-current="page"><span class="n">03</span><span class="t"><span>Il kit</span><span aria-hidden="true">Il kit</span></span></a></li><li style="--i:3"><a class="menu-voce" href="bioplastica.html" data-img="3"><span class="n">04</span><span class="t"><span>Bioplastica e ricette</span><span aria-hidden="true">Bioplastica e ricette</span></span></a></li><li style="--i:4"><a class="menu-voce" href="progetto.html" data-img="4"><span class="n">05</span><span class="t"><span>Il progetto</span><span aria-hidden="true">Il progetto</span></span></a></li><li style="--i:5"><a class="menu-voce" href="lampada.html" data-img="5"><span class="n">06</span><span class="t"><span>Scopri in 3D</span><span aria-hidden="true">Scopri in 3D</span></span></a></li></ul>
+  <div class="menu-anteprima" aria-hidden="true"><img src="img/menu-lampada.webp" alt="" loading="lazy" data-i="0" class=on><img src="img/cubo-giallo.webp" alt="" loading="lazy" data-i="1" style="object-fit:contain;background:#f3c300"><img src="img/menu-kit.webp" alt="" loading="lazy" data-i="2"><img src="img/menu-bio.webp" alt="" loading="lazy" data-i="3"><img src="img/menu-progetto.webp" alt="" loading="lazy" data-i="4"><img src="img/hero-buio-tel.webp" alt="" loading="lazy" data-i="5"></div>
+  <div class="menu-piede">
+    <span>LOOP — kit educativo per creare la tua lampada con le bioplastiche</span>
+    <nav aria-label="Contatti"><a href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a><a href="mailto:">Scrivimi</a></nav>
+  </div>
+</div>
+
+<main id="top">
+  <section class="testa-pagina">
+    <div class="wrap">
+      <p class="etichetta trattino">Il kit</p>
+      <h1 class="display h1 titolo-anim">Apri la scatola</h1>
+      <p class="lead muto">Una scatola di cartone grande poco più di un libro. Dentro c'è tutto: gli ingredienti per la bioplastica, la luce e le otto lastre della lampada, piatte, pronte da montare.</p>
+      <p class="kit-scorri"><i></i>Scorri piano</p>
+    </div>
+  </section>
+
+  <!-- LA SCATOLA SI APRE ALLO SCROLL (oggetti in js/kit.js, montaggio 3D in js/kit3d.js) -->
+  <section class="kit" id="kit" aria-label="Il contenuto del kit, oggetto per oggetto">
+    <div class="kit-pin">
+      <div class="kit-didascalie">
+        <div class="kit-didascalia"><span class="etichetta">01 — La scatola</span><p class="display">Tutto qui dentro</p></div>
+        <div class="kit-didascalia"><span class="etichetta">02 — Si apre</span><p class="display">Togli il coperchio</p></div>
+        <div class="kit-didascalia"><span class="etichetta">03 — La base</span><p class="display">Pectina e glicerina</p><small>La pectina dà corpo, la glicerina rende la bioplastica flessibile.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">04 — Il colore</span><p class="display">Quattro coloranti naturali</p><small>Curcuma, barbabietola, spirulina e spirulina blu: si trovano in cucina.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">05 — La luce</span><p class="display">Lampadina e telecomando</p><small>La base della lampadina è magnetica: si aggancia da sola.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">06 — Sotto il separè</span><p class="display">Struttura e istruzioni</p><small>Tolto il cartone che divide ingredienti e luce, c'è il resto.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">07 — Le istruzioni</span><p class="display">Il libretto</p><small>Ricette e montaggio, passo per passo, con i disegni.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">08 — La struttura</span><p class="display">Otto lastre piatte</p><small>Alluminio e ferro tagliati al laser.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">09 — Il montaggio</span><p class="display">Si monta a incastro</p><small>Base, lampadina, cornici, lati e coperchio. Niente viti.</small></div>
+        <div class="kit-didascalia"><span class="etichetta">10 — Accendila</span><p class="display">Ed ecco la tua lampada</p></div>
+      </div>
+      <div class="kit-scena" id="kit-scena"></div>
+      <div class="kit-3d" id="kit-3d"></div>
+      <div class="kit-finale" id="kit-finale"><a href="lampada.html" class="btn giallo">Scoprila in 3D <span class="freccia">→</span></a><a href="bioplastica.html" class="btn">Le ricette</a></div>
+      <div class="kit-barra" aria-hidden="true"><i></i></div>
+    </div>
+  </section>
+
+  <!-- ELENCO: cosa c'è nel kit (resta anche senza animazioni) -->
+  <section class="sezione">
+    <div class="wrap">
+      <div class="intesta">
+        <p class="etichetta">Nella scatola</p>
+        <h2 class="display h2">Cosa c'è nel kit</h2>
+        <p class="lead muto">Serve solo quello che c'è già in ogni cucina: acqua, un pentolino, un fornello e un po' di pazienza mentre la bioplastica asciuga.</p>
+      </div>
+      <ol class="kit-lista">
+        <li class="rivela"><span class="num">01</span><h3>Pectina</h3><p>La base della bioplastica: di origine vegetale, lucida e trasparente, mantiene bene la forma.</p></li>
+        <li class="rivela"><span class="num">02</span><h3>Glicerina</h3><p>Il plastificante: rende il materiale morbido e flessibile, così si può piegare senza rompersi.</p></li>
+        <li class="rivela"><span class="num">03</span><h3>4 coloranti naturali</h3><p>Curcuma per il giallo, barbabietola per il rosso, spirulina per il verde, spirulina blu per mescolare.</p></li>
+        <li class="rivela"><span class="num">04</span><h3>Lampadina magnetica</h3><p>Si appoggia sulla base in ferro e resta ferma da sola.</p></li>
+        <li class="rivela"><span class="num">05</span><h3>Telecomando</h3><p>Accende, spegne e cambia l'intensità della luce.</p></li>
+        <li class="rivela"><span class="num">06</span><h3>8 lastre a incastro</h3><p>Due lati pieni, due lati a cornice con calamite, coperchio, base in ferro e due cornici in ferro.</p></li>
+        <li class="rivela"><span class="num">07</span><h3>Libretto di istruzioni</h3><p>Le ricette, il montaggio e qualche idea per continuare a sperimentare.</p></li>
+      </ol>
+      <div class="kit-azioni">
+        <a href="bioplastica.html#ricette" class="btn">Le ricette <span class="freccia">→</span></a>
+        <a href="lampada.html" class="btn giallo">La lampada in 3D <span class="freccia">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="piede">
+  <div class="wrap piede-cta">
+    <p class="etichetta trattino">Pronta ad accendersi</p>
+    <p class="piede-grande">Gira la lampada,<br>accendi la luce</p>
+    <a href="lampada.html" class="piede-tondo" data-magnete>Scopri<br>in 3D<span>→</span></a>
+  </div>
+  <div class="wrap piede-griglia">
+    <div><h3>Pagine</h3><ul><li><a href="index.html#lampada">La lampada</a></li><li><a href="kit.html">Il kit</a></li><li><a href="bioplastica.html">Bioplastica e ricette</a></li><li><a href="progetto.html">Il progetto</a></li></ul></div>
+    <div><h3>Contatti</h3><ul><li><a href="https://www.tiktok.com/@atitoma" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.instagram.com/p/DcgDtTpDUle/" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:">Scrivimi</a></li></ul></div>
+    <div><h3>La tesi</h3><p>Educare alla sostenibilità attraverso il design. LABA Rimini, relatore Prof. Carlo Rausa, 2026.</p></div>
+    <button class="su" id="su" aria-label="Torna su">↑</button>
+  </div>
+  <div class="wrap piede-fondo"><span>© 2026 Atena Tomasetti</span><span>Fatto a mano, come la bioplastica</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="js/main.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" } }</script>
+<script src="js/kit.js" defer></script>
+</body>
+</html>

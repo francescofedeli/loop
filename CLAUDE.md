@@ -33,7 +33,7 @@ Lo stato del lavoro (fatto / da fare / decisioni) è in [PROGETTO.md](PROGETTO.m
 
 ## Struttura cartelle
 
-- `sito/` — il sito (versione di riferimento): `index.html`, `lampada.html`, `css/`, `js/`, `img/`, `tex/`, `font/`
+- `sito/` — il sito (versione di riferimento): `index.html`, `kit.html`, `bioplastica.html`, `progetto.html`, `lampada.html`, `css/`, `js/`, `img/`, `tex/`, `font/`
 - `prototipi/` — prototipo della lampada 3D (le modifiche al 3D vanno fatte in `sito/lampada.html`)
 - `immagini/` — materiale grezzo fornito dall'utente (screenshot, foto)
 - `mockup/` — primo mockup statico (scartato, tenuto come riferimento)

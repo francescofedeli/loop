@@ -7,6 +7,9 @@
 <meta name="description" content="Gira la lampada LOOP in 3D, regola la luce e prova le bioplastiche e i colori della struttura.">
 <meta name="theme-color" content="#0b0a09">
 <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<!-- transizioni: intro alla prima visita, velo chiuso se si arriva da un'altra pagina del sito -->
+<script>try { const r = document.documentElement, s = sessionStorage; if (s.getItem("loop-velo")) { r.classList.add("velo-arrivo"); s.removeItem("loop-velo"); } else if (!s.getItem("loop-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("intro-on"); } catch (e) {}</script>
 <style>
   @font-face { font-family: "Lemon Milk"; src: url(font/LemonMilk-Bold.woff2) format("woff2"); font-weight: 700; font-display: swap; }
   @font-face { font-family: "Garet"; src: url(font/Garet-Book.woff2) format("woff2"); font-weight: 400; font-display: swap; }
@@ -48,6 +51,7 @@
   .ui button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
   .pill { font-family: "Lemon Milk"; font-size: 11px; letter-spacing: .12em; padding: 10px 16px; border-radius: 99px; background: rgba(255,255,255,.1); transition: background .2s; white-space: nowrap; }
   .pill:hover { background: rgba(255,255,255,.18); }
+  .ui .pill { height: auto; display: inline-block; } /* style.css usa .pill per l'header del sito */
   .pill[aria-pressed="true"] { background: #f3c300; color: #0b0a09; }
   .swatches { display: flex; gap: 8px; }
   .swatch { width: 34px; height: 34px; border-radius: 50%; background-size: cover; outline: 2px solid transparent; outline-offset: 2px; transition: outline-color .2s, transform .2s; }
@@ -83,6 +87,14 @@
 </script>
 </head>
 <body>
+<!-- VELO: la riga verticale che si apre (intro e cambio pagina) -->
+<div class="velo" id="velo" aria-hidden="true">
+  <div class="velo-meta sx"></div>
+  <div class="velo-meta dx"></div>
+  <div class="velo-riga"></div>
+  <div class="velo-centro"><svg class="velo-logo" viewBox="233.12 45.13 129.04 131.47" ><g fill="currentColor" fill-rule="evenodd"><g class="lettera" style="--r:-24deg"><path d="M244.62 100.60L279.47 109.78L284.09 96.62L263.03 91.08L273.50 51.30L258.63 47.39ZZ"/><path d="M280.65 95.70L277.12 109.11L282.82 110.61L286.35 97.20ZZ"/></g><path class="lettera" style="--r:18deg" d="M316.04 53.58C300.46 60.03 293.69 75.88 299.96 91.03C306.24 106.18 322.23 112.59 337.81 106.13C353.39 99.68 360.16 83.84 353.89 68.69C347.61 53.54 331.62 47.13 316.04 53.58M332.53 93.38C325.42 96.32 318.07 92.85 314.77 84.89C311.47 76.93 314.22 69.28 321.32 66.34C328.43 63.39 335.78 66.86 339.08 74.82C342.38 82.78 339.63 90.44 332.53 93.38Z"/><path class="lettera" style="--r:-14deg" d="M257.47 115.60C241.89 122.05 235.12 137.89 241.39 153.04C247.67 168.19 263.66 174.60 279.24 168.15C294.81 161.70 301.59 145.86 295.31 130.71C289.04 115.56 273.04 109.15 257.47 115.60M273.95 155.40C266.85 158.34 259.49 154.87 256.20 146.91C252.90 138.95 255.65 131.30 262.75 128.35C269.85 125.41 277.21 128.88 280.51 136.84C283.80 144.80 281.06 152.46 273.95 155.40Z"/><path class="lettera" style="--r:26deg" d="M349.40 124.45C344.72 113.15 334.31 109.54 320.01 115.46L301.35 123.19L322.41 174.03L336.62 168.15L330.52 153.43L334.80 151.65C349.18 145.70 354.08 135.74 349.40 124.45M335.11 130.37C336.78 134.39 335.37 137.78 329.89 140.05L325.70 141.78L320.38 128.95L324.58 127.21C330.06 124.94 333.44 126.34 335.11 130.37Z"/></g></svg></div>
+  <button class="velo-salta" id="velo-salta" tabindex="-1">Salta</button>
+</div>
 
 <div class="fallback"><img src="img/foto-fallback.webp" alt="Lampada LOOP accesa"></div>
 
@@ -97,7 +109,7 @@
   <p>Davanti vedi la bioplastica in controluce, con tutte le sue texture. Dietro, la luce colorata tinge il muro. Gira la lampada, regola la luce, cambia bioplastica e colore della struttura.</p>
 </section>
 
-<p class="hint">Trascina per girare la lampada</p>
+<p class="hint">Trascina per girarla, in su e in giù per guardarla dall'alto, rotella o due dita per avvicinarti</p>
 
 <div class="ui">
   <button class="pill" id="power" aria-pressed="true">Accesa</button>
@@ -111,6 +123,7 @@
   <div class="swatches" id="colori" aria-label="Colore struttura"></div>
   <span class="sep"></span>
   <button class="pill" id="stack" aria-pressed="false">Impila</button>
+  <button class="pill" id="monta">Montala</button>
 </div>
 
 <script type="module">
@@ -118,10 +131,13 @@
 
   // Bioplastiche disponibili: aggiungere qui le nuove texture (512px, webp)
   const BIOPLASTICHE = [
+    { id: "marmo",   src: "tex/marmo.webp" },
     { id: "pois",    src: "tex/pois.webp" },
     { id: "rossa",   src: "tex/rossa.webp" },
-    { id: "cielo",   src: "tex/cielo.webp" },
     { id: "corallo", src: "tex/corallo.webp" },
+    { id: "aurora",   src: "tex/aurora.webp" },
+    { id: "bolle",    src: "tex/bolle.webp" },
+    { id: "pois-blu", src: "tex/pois-blu.webp" },
   ];
 
   // Colori della struttura, come nei render della tesi (verniciatura a polvere)
@@ -148,7 +164,7 @@
   renderer.setClearColor(0x0b0a09);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(28, 1, 1, 600);
+  const camera = new THREE.PerspectiveCamera(28, 1, 5, 400); // near più lontano = più precisione di profondità
 
   const ambiente = new THREE.HemisphereLight(0xffffff, 0x2a2420, 1.1);
   const key = new THREE.DirectionalLight(0xffffff, 1.3);
@@ -162,6 +178,7 @@
     if (!textures[b.id]) {
       textures[b.id] = loader.load(b.src, render);
       textures[b.id].colorSpace = THREE.SRGBColorSpace;
+      textures[b.id].anisotropy = renderer.capabilities.getMaxAnisotropy(); // texture nitide anche di sbieco
     }
     return textures[b.id];
   }
@@ -179,9 +196,10 @@
   // ---- Un cubo LOOP: 12 cm, cornici da 1 cm, finestra 10 cm ----
   // 4 lati + coperchio in alluminio, base in ferro (la lampadina magnetica si aggancia lì)
   const S = 12, T = 0.15, W = 10;
-  // i pannelli pieni stanno tra le due cornici, così non si sovrappongono negli spigoli
+  // i pannelli pieni stanno tra le due cornici, così non si sovrappongono negli spigoli;
+  // base e coperchio stanno tra i due lati (prima si compenetravano e lo spigolo "sfarfallava")
   const pannelloLato = new THREE.BoxGeometry(S - 0.62, S, T);
-  const pannelloOrizz = new THREE.BoxGeometry(S, S - 0.62, T);
+  const pannelloOrizz = new THREE.BoxGeometry(S - 2 * T - 0.02, S - 0.62, T);
   const telaio = (() => {
     const shape = new THREE.Shape();
     shape.moveTo(-S/2, -S/2); shape.lineTo(S/2, -S/2); shape.lineTo(S/2, S/2); shape.lineTo(-S/2, S/2);
@@ -195,6 +213,23 @@
   const fessuraLato = new THREE.BoxGeometry(0.18, 4.5, T + 0.02);
   const fessuraOrizz = new THREE.BoxGeometry(4.5, 0.18, T + 0.02);
 
+  // lampadina magnetica: sfera opalina su un piedino, appoggiata sulla base in ferro
+  const vetroMat = new THREE.MeshBasicMaterial({ color: 0xdedbd4 });
+  const piedinoMat = new THREE.MeshStandardMaterial({ color: 0xe8e6e1, roughness: 0.5 });
+  const sferaGeo = new THREE.SphereGeometry(3, 24, 16);
+  const piedinoGeo = new THREE.CylinderGeometry(1.5, 1.7, 1.6, 20);
+  function creaLampadina() {
+    const l = new THREE.Group();
+    const p = new THREE.Mesh(piedinoGeo, piedinoMat); p.position.y = 0.8;
+    const v = new THREE.Mesh(sferaGeo, vetroMat); v.position.y = 1.6 + 2.6;
+    l.add(p, v);
+    l.position.y = -S/2 + T;
+    return l;
+  }
+
+  // montaggio (come nel video della tesi): da dove arriva ogni pezzo e quando parte
+  const montaggio = (m, dx, dy, dz, ritardo) => { m.userData.monta = { da: new THREE.Vector3(dx, dy, dz), ritardo, fine: m.position.clone() }; };
+
   function creaCubo(bio) {
     const g = new THREE.Group();
     for (const [axis, sign] of [["x", 1], ["x", -1], ["y", 1], ["y", -1]]) {
@@ -202,6 +237,10 @@
       const m = new THREE.Mesh(axis === "x" ? pannelloLato : pannelloOrizz, base ? ferro : alluminio);
       if (axis === "x") { m.rotation.y = Math.PI / 2; m.position.x = sign * (S/2 - T/2); }
       else { m.rotation.x = Math.PI / 2; m.position.y = sign * (S/2 - T/2); }
+      // base per prima, poi (dopo lampadina e cornici) i lati, il coperchio per ultimo
+      if (base) montaggio(m, 0, -14, 0, 0);
+      else if (axis === "x") montaggio(m, sign * 26, 0, 0, 1.7);
+      else montaggio(m, 0, 24, 0, 2.4);
       if (!base) for (const k of [1, -1]) {
         const f = new THREE.Mesh(axis === "x" ? fessuraLato : fessuraOrizz, fessuraMat);
         if (axis === "x") f.position.x = k * 4.4; else f.position.y = k * 4.4;
@@ -219,8 +258,12 @@
       lato.add(p);
       lato.position.z = sign * (S/2 - 0.3);
       if (sign < 0) lato.rotation.y = Math.PI;
+      montaggio(lato, 0, 0, sign * 28, 1.05 + (sign < 0 ? 0.2 : 0));
       g.add(lato);
     }
+    const lamp = creaLampadina();
+    montaggio(lamp, 0, 22, 0, 0.45);
+    g.add(lamp);
     g.userData.bioMat = bioMat;
     return g;
   }
@@ -245,7 +288,7 @@
     grd.addColorStop(0, "rgba(0,0,0,.7)"); grd.addColorStop(1, "rgba(0,0,0,0)");
     x.fillStyle = grd; x.fillRect(0, 0, 128, 128);
     const m = new THREE.Mesh(new THREE.PlaneGeometry(22, 22), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
-    m.rotation.x = -Math.PI / 2; m.position.y = -S/2 + 0.03;
+    m.rotation.x = -Math.PI / 2; m.position.y = -S/2 - 0.02; // appena sotto la lampada, mai dentro i pannelli
     return m;
   })();
 
@@ -272,7 +315,7 @@
     const m = new THREE.Mesh(new THREE.PlaneGeometry(26, 20), pavimentoMat[i]);
     m.rotation.x = -Math.PI / 2;
     if (sign < 0) m.rotation.z = Math.PI;
-    m.position.set(0, -S/2 + 0.02, sign * (S/2 - 0.5 + 10));
+    m.position.set(0, -S/2 - 0.03, sign * (S/2 - 0.5 + 10));
     pozze.add(m);
   });
   scene.add(macchiaMuro);
@@ -310,6 +353,7 @@
   function aggiornaLuce() {
     const k = accesa ? intensita : 0;
     cubi.forEach(c => c.userData.bioMat.color.setScalar(0.22 + 0.78 * k));
+    vetroMat.color.setHex(0xcfccc5).lerp(new THREE.Color(0xfff6dc), k);
     fessuraMat.color.copy(buio).lerp(coloreLuce, k * 0.55);
     // con la lampada spenta la stanza è un po' più illuminata, come di giorno
     ambiente.intensity = 1.1 + (1 - k) * 0.4;
@@ -409,25 +453,54 @@
   };
 
   // ---- Rotazione: si gira la lampada, non la camera (il muro resta dietro) ----
-  let velocita = reduceMotion ? 0 : 0.0025;
+  let velocita = reduceMotion ? 0 : 0.0011; // rotazione automatica lenta
   const AUTO = velocita;
-  let trascinando = false, ultimoX = 0, ultimoT = 0, inattivo = 0;
+  let trascinando = false, ultimoX = 0, ultimoY = 0, ultimoT = 0, inattivo = 0;
+  // zoom: rotella del mouse o due dita sul telefono
+  let zoom = 1; const ZOOM_MIN = 0.5, ZOOM_MAX = 1.7;
+  const dita = new Map(); let distanzaDita = 0;
+  const impostaZoom = z => { zoom = THREE.MathUtils.clamp(z, ZOOM_MIN, ZOOM_MAX); inquadra(); };
+  canvas.addEventListener("wheel", e => { e.preventDefault(); impostaZoom(zoom * (1 + e.deltaY * 0.0012)); }, { passive: false });
+  // inclinazione della camera: trascinando in verticale si guarda la lampada più dall'alto o più di lato
+  let inclinazione = 0.25; const INCL_MIN = 0.02, INCL_MAX = 1.4;
   canvas.addEventListener("pointerdown", e => {
-    trascinando = true; ultimoX = e.clientX; ultimoT = performance.now();
+    dita.set(e.pointerId, [e.clientX, e.clientY]);
+    if (dita.size === 2) { const [a, b] = [...dita.values()]; distanzaDita = Math.hypot(a[0] - b[0], a[1] - b[1]); }
+    trascinando = true; ultimoX = e.clientX; ultimoY = e.clientY; ultimoT = performance.now();
     canvas.setPointerCapture(e.pointerId);
     document.querySelector(".hint").style.opacity = 0;
     avvia();
   });
   canvas.addEventListener("pointermove", e => {
     if (!trascinando) return;
+    if (dita.has(e.pointerId)) dita.set(e.pointerId, [e.clientX, e.clientY]);
+    if (dita.size === 2) {
+      // due dita: si allontanano = zoom avanti
+      const [a, b] = [...dita.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+      if (distanzaDita) impostaZoom(zoom * distanzaDita / d);
+      distanzaDita = d;
+      return;
+    }
     const dx = e.clientX - ultimoX, now = performance.now();
-    lampada.rotation.y += dx * 0.008;
-    velocita = (dx * 0.008) / Math.max(1, (now - ultimoT) / 16);
-    ultimoX = e.clientX; ultimoT = now;
+    lampada.rotation.y += dx * 0.005;
+    velocita = (dx * 0.005) / Math.max(1, (now - ultimoT) / 16);
+    const dy = e.clientY - ultimoY;
+    if (dy) { inclinazione = THREE.MathUtils.clamp(inclinazione + dy * 0.005, INCL_MIN, INCL_MAX); inquadra(); }
+    ultimoX = e.clientX; ultimoY = e.clientY; ultimoT = now;
   });
-  const rilascia = () => { trascinando = false; inattivo = 0; };
+  const rilascia = e => { dita.delete(e.pointerId); distanzaDita = 0; if (!dita.size) { trascinando = false; inattivo = 0; } };
   canvas.addEventListener("pointerup", rilascia);
   canvas.addEventListener("pointercancel", rilascia);
+
+  document.getElementById("monta").onclick = () => {
+    if (reduceMotion) return;
+    // si parte con la luce spenta e i pezzi lontani, poi arrivano uno alla volta
+    accesa = false; powerBtn.setAttribute("aria-pressed", false); powerBtn.textContent = "Spenta";
+    aggiornaLuce();
+    inizioMontaggio = performance.now();
+    aggiornaMontaggio();
+    avvia();
+  };
 
   // distanza della camera: tutta la lampada (1 o 3 cubi) deve stare nello schermo,
   // anche in verticale su telefono, lasciando spazio ai pulsanti in basso
@@ -437,11 +510,13 @@
     const fov = THREE.MathUtils.degToRad(camera.fov);
     const perAltezza = (altezza / 0.55) / (2 * Math.tan(fov / 2));
     const perLarghezza = (larghezza / 0.7) / (2 * Math.tan(fov / 2) * camera.aspect);
-    const d = Math.max(perAltezza, perLarghezza);
+    const d = Math.max(perAltezza, perLarghezza) * zoom;
     const centroY = (cubi.length - 1) * S / 2;
-    camera.position.set(0, centroY + d * 0.26, d);
     // il punto guardato è un po' sotto il centro: la lampada sale e lascia spazio ai pulsanti
-    camera.lookAt(0, centroY - altezza * 0.12, 0);
+    // (dall'alto lo spostamento si annulla, altrimenti la lampada uscirebbe dallo schermo)
+    const mira = centroY - altezza * 0.12 * Math.cos(inclinazione);
+    camera.position.set(0, mira + d * Math.sin(inclinazione), d * Math.cos(inclinazione));
+    camera.lookAt(0, mira, 0);
     render();
   }
 
@@ -456,17 +531,37 @@
 
   // ---- Animazione: gira solo se visibile e se c'è movimento ----
   let visibile = true, raf = 0;
+  let inizioMontaggio = -1;
+  const DURATA_PEZZO = 0.9;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  function aggiornaMontaggio() {
+    const t = (performance.now() - inizioMontaggio) / 1000;
+    let finito = true;
+    cubi.forEach((c, i) => c.traverse(o => {
+      const m = o.userData.monta; if (!m) return;
+      const k = THREE.MathUtils.clamp((t - m.ritardo - i * 0.5) / DURATA_PEZZO, 0, 1);
+      if (k < 1) finito = false;
+      o.position.copy(m.fine).addScaledVector(m.da, 1 - easeOut(k));
+    }));
+    if (finito) {
+      inizioMontaggio = -1;
+      // a montaggio finito la lampada si accende
+      accesa = true; powerBtn.setAttribute("aria-pressed", true); powerBtn.textContent = "Accesa";
+      aggiornaLuce();
+    }
+  }
   function frame() {
     raf = 0;
     if (!visibile) return;
+    if (inizioMontaggio >= 0) aggiornaMontaggio();
     if (!trascinando) {
       lampada.rotation.y += velocita;
       // dopo un lancio la lampada rallenta e torna alla rotazione lenta
-      velocita += (AUTO - velocita) * 0.04;
+      velocita += (AUTO - velocita) * 0.025;
     }
     aggiornaRiflessi();
     render();
-    if (trascinando || Math.abs(velocita) > 1e-5) raf = requestAnimationFrame(frame);
+    if (trascinando || inizioMontaggio >= 0 || Math.abs(velocita) > 1e-5) raf = requestAnimationFrame(frame);
   }
   function avvia() { if (!raf) raf = requestAnimationFrame(frame); }
 
@@ -481,5 +576,6 @@
   resize();
   avvia();
 </script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
