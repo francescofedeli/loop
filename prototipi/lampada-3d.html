@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOOP — Prototipo lampada 3D</title>
+<style>
+  @font-face { font-family: "Lemon Milk"; src: url(../font/LemonMilk-Bold.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: "Garet"; src: url(../font/Garet-Book.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+
+  :root { --glow: 242, 163, 58; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #0b0a09;
+    color: #f3efe8;
+    font: 400 16px/1.5 Garet, system-ui, sans-serif;
+    overflow: hidden;
+  }
+
+  /* alone di luce dietro la lampada, prende il colore della bioplastica */
+  .stage {
+    position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 46%, rgba(var(--glow), .55), rgba(var(--glow), .12) 32%, transparent 62%);
+    transition: opacity .6s ease, background .6s ease;
+  }
+  .stage { opacity: var(--facing, 1); transition: background .6s ease; }
+  body.off .stage { opacity: 0; transition: opacity .6s ease, background .6s ease; }
+  canvas { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  canvas:active { cursor: grabbing; }
+
+  .fallback { position: fixed; inset: 0; display: none; }
+  .fallback img { width: 100%; height: 100%; object-fit: cover; }
+  body.no-webgl .fallback { display: block; }
+
+  header, .ui, .hint { z-index: 2; }
+  header { position: fixed; top: 24px; left: 24px; right: 24px; display: flex; justify-content: space-between; align-items: start; pointer-events: none; }
+  header img { width: 64px; filter: invert(1); }
+  header p { font-family: "Lemon Milk"; font-size: 11px; letter-spacing: .16em; opacity: .6; text-align: right; }
+
+  .ui {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 12px; border-radius: 99px;
+    background: rgba(255,255,255,.07); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.1);
+  }
+  .ui button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .pill { font-family: "Lemon Milk"; font-size: 11px; letter-spacing: .12em; padding: 10px 16px; border-radius: 99px; background: rgba(255,255,255,.1); transition: background .2s; }
+  .pill:hover { background: rgba(255,255,255,.18); }
+  .pill[aria-pressed="true"] { background: #f3efe8; color: #0b0a09; }
+  .swatches { display: flex; gap: 8px; }
+  .swatch { width: 34px; height: 34px; border-radius: 50%; background-size: cover; outline: 2px solid transparent; outline-offset: 2px; transition: outline-color .2s, transform .2s; }
+  .swatch:hover { transform: scale(1.08); }
+  .swatch[aria-pressed="true"] { outline-color: #f3efe8; }
+  .swatch.colore { width: 24px; height: 24px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
+  .sep { width: 1px; height: 24px; background: rgba(255,255,255,.15); }
+
+  .hint { position: fixed; bottom: 96px; left: 0; right: 0; text-align: center; font-size: 13px; opacity: .45; pointer-events: none; }
+
+  @media (max-width: 720px) {
+    .ui { flex-wrap: wrap; justify-content: center; width: calc(100% - 32px); border-radius: 24px; gap: 10px; padding: 10px; bottom: 16px; }
+    .ui .sep { display: none; }
+    .pill { padding: 9px 12px; font-size: 10px; }
+    .swatch { width: 30px; height: 30px; }
+    .hint { bottom: 150px; }
+  }
+</style>
+<script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+</script>
+</head>
+<body>
+
+<div class="stage"></div>
+<div class="fallback"><img src="foto-fallback.webp" alt="Lampada LOOP accesa"></div>
+
+<header>
+  <img src="../logo/loop-logo.svg" alt="LOOP">
+  <p>Prototipo<br>lampada 3D</p>
+</header>
+
+<p class="hint">Trascina per ruotare</p>
+
+<div class="ui">
+  <button class="pill" id="power" aria-pressed="true">Accesa</button>
+  <span class="sep"></span>
+  <div class="swatches" id="swatches" aria-label="Bioplastica"></div>
+  <span class="sep"></span>
+  <div class="swatches" id="colori" aria-label="Colore struttura"></div>
+  <span class="sep"></span>
+  <button class="pill" id="stack" aria-pressed="false">Impila</button>
+</div>
+
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+  // Bioplastiche disponibili: aggiungere qui le nuove texture (512px, webp)
+  const BIOPLASTICHE = [
+    { id: "pois",    src: "tex/pois.webp" },
+    { id: "rossa",   src: "tex/rossa.webp" },
+    { id: "cielo",   src: "tex/cielo.webp" },
+    { id: "corallo", src: "tex/corallo.webp" },
+  ];
+
+  // Colori della struttura, come nei render della tesi
+  const STRUTTURE = [
+    { id: "alluminio", colore: 0xc9c8c4, cornice: 0x8d8b87, metallo: 0.35, ruvido: 0.45 },
+    { id: "nero",      colore: 0x1d1d1d, cornice: 0x1d1d1d, metallo: 0.1,  ruvido: 0.6 },
+    { id: "bianco",    colore: 0xecebe7, cornice: 0xecebe7, metallo: 0.05, ruvido: 0.6 },
+    { id: "giallo",    colore: 0xf3c300, cornice: 0xf3c300, metallo: 0.05, ruvido: 0.55 },
+    { id: "arancione", colore: 0xf0601c, cornice: 0xf0601c, metallo: 0.05, ruvido: 0.55 },
+  ];
+
+  const canvas = document.createElement("canvas");
+  const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+  if (!gl) { document.body.classList.add("no-webgl"); throw new Error("WebGL non disponibile"); }
+  document.body.prepend(canvas);
+
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "low-power" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 1, 400);
+  camera.position.set(34, 20, 46);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.enablePan = false;
+  controls.minDistance = 40;
+  controls.maxDistance = 110;
+  controls.autoRotate = !reduceMotion;
+  controls.autoRotateSpeed = 0.6;
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x2a2420, 1.4));
+  const key = new THREE.DirectionalLight(0xffffff, 1.6);
+  key.position.set(20, 30, 25);
+  scene.add(key);
+
+  // ---- Materiali ----
+  const loader = new THREE.TextureLoader();
+  const textures = {};
+  function getTexture(b) {
+    if (!textures[b.id]) {
+      textures[b.id] = loader.load(b.src, render);
+      textures[b.id].colorSpace = THREE.SRGBColorSpace;
+    }
+    return textures[b.id];
+  }
+  const alluminio = new THREE.MeshStandardMaterial();
+  const ferro = new THREE.MeshStandardMaterial();
+  // le fessure degli incastri: da accesa ci passa la luce interna
+  const fessuraMat = new THREE.MeshBasicMaterial({ color: 0x0a0a0a });
+  function impostaStruttura(s) {
+    alluminio.color.setHex(s.colore); alluminio.metalness = s.metallo; alluminio.roughness = s.ruvido;
+    ferro.color.setHex(s.cornice); ferro.metalness = s.metallo + 0.05; ferro.roughness = s.ruvido + 0.1;
+    render();
+  }
+
+  // ---- Un cubo LOOP: 12 cm, cornice 1 cm, finestra 10 cm ----
+  const S = 12, T = 0.15, W = 10;
+  // i pannelli pieni stanno tra le due cornici, così non si sovrappongono negli spigoli
+  const pannelloLato = new THREE.BoxGeometry(S - 0.62, S, T);
+  const pannelloOrizz = new THREE.BoxGeometry(S, S - 0.62, T);
+
+  const cornice = (() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(-S/2, -S/2); shape.lineTo(S/2, -S/2); shape.lineTo(S/2, S/2); shape.lineTo(-S/2, S/2);
+    const hole = new THREE.Path();
+    hole.moveTo(-W/2, -W/2); hole.lineTo(-W/2, W/2); hole.lineTo(W/2, W/2); hole.lineTo(W/2, -W/2);
+    shape.holes.push(hole);
+    return new THREE.ExtrudeGeometry(shape, { depth: 0.3, bevelEnabled: false });
+  })();
+  const finestra = new THREE.PlaneGeometry(W, W);
+  // due fessure per pannello, parallele alle finestre (come nei disegni tecnici)
+  const fessuraLato = new THREE.BoxGeometry(0.18, 4.5, T + 0.02);
+  const fessuraOrizz = new THREE.BoxGeometry(4.5, 0.18, T + 0.02);
+
+  function creaCubo(bio) {
+    const g = new THREE.Group();
+    // lati pieni: sopra, sotto, sinistra, destra
+    for (const [axis, sign] of [["x", 1], ["x", -1], ["y", 1], ["y", -1]]) {
+      const m = new THREE.Mesh(axis === "x" ? pannelloLato : pannelloOrizz, alluminio);
+      if (axis === "x") { m.rotation.y = Math.PI / 2; m.position.x = sign * (S/2 - T/2); }
+      else { m.rotation.x = Math.PI / 2; m.position.y = sign * (S/2 - T/2); }
+      for (const k of [1, -1]) {
+        const f = new THREE.Mesh(axis === "x" ? fessuraLato : fessuraOrizz, fessuraMat);
+        if (axis === "x") f.position.x = k * 4.4; else f.position.y = k * 4.4;
+        m.add(f);
+      }
+      g.add(m);
+    }
+    // lati con bioplastica: davanti e dietro
+    const bioMat = new THREE.MeshBasicMaterial({ map: getTexture(bio), side: THREE.DoubleSide });
+    for (const sign of [1, -1]) {
+      const c = new THREE.Mesh(cornice, ferro);
+      c.position.z = sign * (S/2 - 0.3);
+      if (sign < 0) c.rotation.y = Math.PI;
+      g.add(c);
+      const p = new THREE.Mesh(finestra, bioMat);
+      p.position.z = sign * (S/2 - 0.35);
+      if (sign < 0) p.rotation.y = Math.PI;
+      g.add(p);
+      // alone davanti alla finestra: quando la finestra è girata dall'altra parte
+      // il cubo lo copre e resta solo il controluce che sbuca dai bordi
+      const h = new THREE.Sprite(haloMat[sign > 0 ? 0 : 1]);
+      h.renderOrder = -1;
+      h.scale.setScalar(30);
+      h.position.z = sign * (S/2 + 0.6);
+      g.add(h);
+    }
+    g.userData.bioMat = bioMat;
+    return g;
+  }
+
+  // ombra finta: un gradiente su un piano, nessun calcolo di ombre in tempo reale
+  const ombra = (() => {
+    const c = document.createElement("canvas"); c.width = c.height = 128;
+    const x = c.getContext("2d");
+    const grd = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grd.addColorStop(0, "rgba(0,0,0,.55)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+    x.fillStyle = grd; x.fillRect(0, 0, 128, 128);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(26, 26), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2; m.position.y = -S/2 - 0.01;
+    return m;
+  })();
+
+  // gradiente radiale morbido, usato per l'alone e per la luce sul pavimento
+  function sfumatura(stops) {
+    const c = document.createElement("canvas"); c.width = c.height = 128;
+    const x = c.getContext("2d");
+    const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+    stops.forEach(([o, a]) => g.addColorStop(o, `rgba(255,255,255,${a})`));
+    x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(c);
+  }
+  const morbida = sfumatura([[0, 1], [0.2, .55], [0.45, .18], [0.7, .05], [1, 0]]);
+  // gli aloni si disegnano prima della lampada e senza test di profondità:
+  // il cubo ci passa sopra senza tagli netti, e l'intensità dipende da dove guarda la finestra
+  const haloMat = [1, -1].map(sign => {
+    const m = new THREE.SpriteMaterial({ map: morbida, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, opacity: 0.6 });
+    m.userData.sign = sign;
+    return m;
+  });
+
+  // pozza di luce sul pavimento davanti e dietro le finestre: ruota insieme alla lampada
+  const spillMat = new THREE.MeshBasicMaterial({ map: morbida, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.45 });
+  const spill = new THREE.Group();
+  for (const sign of [1, -1]) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(30, 26), spillMat);
+    m.rotation.x = -Math.PI / 2;
+    m.position.set(0, -S/2 + 0.02, sign * (S/2 + 1));
+    spill.add(m);
+  }
+
+  const lampada = new THREE.Group();
+  lampada.add(ombra, spill);
+  scene.add(lampada);
+
+  let cubi = [];
+  let accesa = true;
+  let corrente = BIOPLASTICHE[0];
+
+  function costruisci(impila) {
+    cubi.forEach(c => lampada.remove(c));
+    const n = impila ? 3 : 1;
+    cubi = Array.from({ length: n }, (_, i) => {
+      const bio = i === 0 ? corrente : BIOPLASTICHE[(BIOPLASTICHE.indexOf(corrente) + i) % BIOPLASTICHE.length];
+      const c = creaCubo(bio);
+      c.position.y = i * S;
+      c.rotation.y = i * 0.12 * (i % 2 ? 1 : -1); // leggero sfalsamento, come impilate a mano
+      lampada.add(c);
+      return c;
+    });
+    lampada.position.y = -(n - 1) * S / 2;
+    aggiornaLuce();
+  }
+
+  function aggiornaLuce() {
+    const k = accesa ? 1 : 0.28;
+    cubi.forEach(c => c.userData.bioMat.color.setScalar(k));
+    spill.visible = accesa;
+    fessuraMat.color.copy(accesa ? spillMat.color : new THREE.Color(0x0a0a0a));
+    haloMat.forEach(m => m.visible = accesa);
+    document.body.classList.toggle("off", !accesa);
+    render();
+  }
+
+  // il colore dell'alone viene dalla media della texture
+  function coloreMedio(src) {
+    return new Promise(res => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas"); c.width = c.height = 8;
+        const x = c.getContext("2d"); x.drawImage(img, 0, 0, 8, 8);
+        const d = x.getImageData(0, 0, 8, 8).data; let r = 0, g = 0, b = 0;
+        for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i+1]; b += d[i+2]; }
+        res([r, g, b].map(v => Math.round(v / 64)).join(","));
+      };
+      img.src = src;
+    });
+  }
+
+  function impostaColore(rgb) {
+    document.documentElement.style.setProperty("--glow", rgb);
+    spillMat.color.setRGB(...rgb.split(",").map(v => v / 255), THREE.SRGBColorSpace);
+    haloMat.forEach(m => m.color.copy(spillMat.color));
+    if (accesa) fessuraMat.color.copy(spillMat.color);
+    render();
+  }
+
+  // ---- UI ----
+  const col = document.getElementById("colori");
+  STRUTTURE.forEach((s, i) => {
+    const btn = document.createElement("button");
+    btn.className = "swatch colore";
+    btn.style.background = "#" + s.colore.toString(16).padStart(6, "0");
+    btn.setAttribute("aria-label", `Struttura ${s.id}`);
+    btn.setAttribute("aria-pressed", i === 0);
+    btn.onclick = () => {
+      col.querySelectorAll(".swatch").forEach(b => b.setAttribute("aria-pressed", b === btn));
+      impostaStruttura(s);
+    };
+    col.append(btn);
+  });
+
+  const sw = document.getElementById("swatches");
+  BIOPLASTICHE.forEach(b => {
+    const btn = document.createElement("button");
+    btn.className = "swatch";
+    btn.style.backgroundImage = `url(${b.src})`;
+    btn.setAttribute("aria-label", `Bioplastica ${b.id}`);
+    btn.setAttribute("aria-pressed", b === corrente);
+    btn.onclick = async () => {
+      corrente = b;
+      sw.querySelectorAll(".swatch").forEach(s => s.setAttribute("aria-pressed", s === btn));
+      costruisci(stackBtn.getAttribute("aria-pressed") === "true");
+      impostaColore(await coloreMedio(b.src));
+    };
+    sw.append(btn);
+  });
+
+  const powerBtn = document.getElementById("power");
+  powerBtn.onclick = () => {
+    accesa = !accesa;
+    powerBtn.setAttribute("aria-pressed", accesa);
+    powerBtn.textContent = accesa ? "Accesa" : "Spenta";
+    aggiornaLuce();
+  };
+
+  const stackBtn = document.getElementById("stack");
+  stackBtn.onclick = () => {
+    const on = stackBtn.getAttribute("aria-pressed") !== "true";
+    stackBtn.setAttribute("aria-pressed", on);
+    costruisci(on);
+    inquadra();
+  };
+
+  // distanza della camera: tutta la lampada (1 o 3 cubi) deve stare nello schermo,
+  // anche in verticale su telefono, lasciando spazio ai pulsanti in basso
+  function inquadra() {
+    const altezza = cubi.length * S + 8;
+    const larghezza = S * 1.6 + 8;
+    const fov = THREE.MathUtils.degToRad(camera.fov);
+    const perAltezza = (altezza / 0.75) / (2 * Math.tan(fov / 2));
+    const perLarghezza = (larghezza / 0.85) / (2 * Math.tan(fov / 2) * camera.aspect);
+    const d = Math.max(perAltezza, perLarghezza);
+    controls.minDistance = d * 0.7;
+    controls.maxDistance = d * 1.6;
+    camera.position.setLength(d);
+    controls.target.set(0, -S * 0.15, 0); // un po' più in alto rispetto ai pulsanti
+    controls.update();
+    render();
+  }
+
+  // ---- Render: solo quando la scena è visibile ----
+  function resize() {
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    inquadra();
+    render();
+  }
+  function render() { renderer.render(scene, camera); }
+
+  // quanto una finestra di bioplastica è rivolta verso chi guarda (0 = lato pieno, 1 = di fronte)
+  const normale = new THREE.Vector3(), versoCamera = new THREE.Vector3();
+  let facingPrec = -1;
+  function aggiornaBagliore() {
+    if (!accesa || !cubi[0]) return;
+    normale.set(0, 0, 1).applyQuaternion(cubi[0].getWorldQuaternion(new THREE.Quaternion()));
+    versoCamera.copy(camera.position).normalize();
+    const d = normale.dot(versoCamera);
+    // finestra di fronte: alone pieno; finestra girata: resta un controluce leggero
+    haloMat.forEach(m => m.opacity = 0.12 + 0.5 * Math.pow(Math.max(0, d * m.userData.sign), 1.5));
+    const f = Math.abs(d);
+    const facing = 0.25 + 0.75 * Math.pow(f, 1.5);
+    if (Math.abs(facing - facingPrec) > 0.01) {
+      document.documentElement.style.setProperty("--facing", facing.toFixed(2));
+      facingPrec = facing;
+    }
+  }
+
+  let visibile = true, raf = 0;
+  function loop() {
+    raf = 0;
+    if (!visibile) return;
+    controls.update();
+    aggiornaBagliore();
+    render();
+    raf = requestAnimationFrame(loop);
+  }
+  new IntersectionObserver(([e]) => {
+    visibile = e.isIntersecting;
+    if (visibile && !raf) loop();
+  }).observe(canvas);
+  document.addEventListener("visibilitychange", () => {
+    visibile = !document.hidden;
+    if (visibile && !raf) loop();
+  });
+  controls.addEventListener("start", () => document.querySelector(".hint").style.opacity = 0);
+
+  addEventListener("resize", resize);
+  impostaStruttura(STRUTTURE[0]);
+  costruisci(false);
+  coloreMedio(corrente.src).then(impostaColore);
+  resize();
+  loop();
+</script>
+</body>
+</html>

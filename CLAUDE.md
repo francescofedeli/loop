@@ -12,7 +12,7 @@ Lo stato del lavoro (fatto / da fare / decisioni) è in [PROGETTO.md](PROGETTO.m
    - aggiungi in "Da fare" i nuovi task emersi;
    - scrivi in "Decisioni" ogni scelta presa con l'utente (e il perché);
    - aggiorna "Materiali" se arrivano nuovi file.
-3. **A fine sessione** proponi un commit con un messaggio chiaro in italiano e il push su GitHub.
+3. **Commit e push su GitHub solo quando l'utente lo dice** (di solito prima di staccare). Messaggi di commit chiari, in italiano.
 4. Non cancellare decisioni passate: se una cambia, barrala e scrivi la nuova sotto.
 
 ## Vincoli di progetto
