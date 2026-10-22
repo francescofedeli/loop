@@ -26,7 +26,8 @@
     anima(riga, [{ transform: "scaleY(1)" }, { transform: "scaleY(1)" }], { duration: 1 });
     anima(logoVelo, [{ opacity: opacitaLogo, transform: "none" }, { opacity: 0, transform: "scale(.85)" }], { duration: 650, delay: ritardo, easing: "cubic-bezier(.4, 0, .2, 1)" });
     root.classList.remove("velo-arrivo");
-    anima(riga, [{ transform: "scaleY(1)", opacity: 1 }, { transform: "scaleY(1)", opacity: 0 }], { duration: 300, delay: ritardo + 300 });
+    // la riga svanisce insieme al logo: non resta mai da sola a tutta altezza
+    anima(riga, [{ transform: "scaleY(1)", opacity: 1 }, { transform: "scaleY(1)", opacity: 0 }], { duration: 450, delay: ritardo, easing: "cubic-bezier(.4, 0, .2, 1)" });
     anima(sx, [{ transform: "none" }, { transform: "translateX(-101%)" }], { ...APRI, delay: ritardo + 300 });
     return anima(dx, [{ transform: "none" }, { transform: "translateX(101%)" }], { ...APRI, delay: ritardo + 300 }).then(() => {
       root.classList.remove("intro-on");
