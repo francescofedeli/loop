@@ -182,6 +182,11 @@
     return `matrix3d(${a},${d},0,${g},${b},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
   }
   const bio = $("#ls-bio");
+  // centro della luce della lampadina, nelle coordinate del render (700 × 684)
+  const LUCE = [364, 504]; // calibrata a mano con ?calibra
+  const luce = $(".ls-luce");
+  const posaLuce = () => { if (luce) { luce.style.left = LUCE[0] / 700 * 100 + "%"; luce.style.top = LUCE[1] / 684 * 100 + "%"; } };
+  posaLuce();
   function posaBio() {
     if (!bio || !cubo) return;
     const k = cubo.offsetWidth / 700;
@@ -197,7 +202,7 @@
     const pannello = document.createElement("div");
     pannello.style.cssText = "position:fixed;left:16px;bottom:16px;z-index:500;background:#121110;color:#f3c300;font:700 14px monospace;padding:12px 14px;max-width:calc(100vw - 32px)";
     document.body.append(pannello);
-    const scrivi = () => pannello.innerHTML = "FINESTRA = " + JSON.stringify(FINESTRA) + '<br><small style="color:#f4f1ea;font-weight:400">trascina i quadratini, oppure clic su uno (diventa blu) e usa le frecce: 1 px, con Maiusc 5 px</small>';
+    const scrivi = () => pannello.innerHTML = "FINESTRA = " + JSON.stringify(FINESTRA) + "<br>LUCE = " + JSON.stringify(LUCE) + '<br><small style="color:#f4f1ea;font-weight:400">rossi = angoli della bioplastica, giallo = centro della luce. Trascina, oppure clic su uno (bordo/colore blu) e usa le frecce: 1 px, con Maiusc 5 px</small>';
     const maniglie = FINESTRA.map((p, i) => {
       const h = document.createElement("span"); h.className = "maniglia";
       h.style.cssText = "position:absolute;z-index:20;width:6px;height:6px;margin:-3px 0 0 -3px;background:#e8432b;outline:1px solid #fff;cursor:grab;touch-action:none";
@@ -214,14 +219,34 @@
       cubo.append(h);
       return h;
     });
+    // quinto quadratino (giallo): il centro della luce della lampadina, sempre accesa mentre si calibra
+    const hl = document.createElement("span"); hl.className = "maniglia";
+    hl.style.cssText = "position:absolute;z-index:21;width:6px;height:6px;margin:-3px 0 0 -3px;background:#f3c300;outline:1px solid #121110;cursor:grab;touch-action:none";
+    const mettiLuce = () => { hl.style.left = LUCE[0] / 700 * 100 + "%"; hl.style.top = LUCE[1] / 684 * 100 + "%"; posaLuce(); };
+    mettiLuce();
+    hl.addEventListener("pointerdown", e => { e.preventDefault(); hl.setPointerCapture(e.pointerId); hl.dataset.su = 1; scegli(4); });
+    hl.addEventListener("pointermove", e => {
+      if (!hl.dataset.su) return;
+      const r = cubo.getBoundingClientRect();
+      LUCE[0] = Math.round((e.clientX - r.left) / r.width * 700); LUCE[1] = Math.round((e.clientY - r.top) / r.height * 684);
+      mettiLuce(); scrivi();
+    });
+    hl.addEventListener("pointerup", () => delete hl.dataset.su);
+    cubo.append(hl);
+    addEventListener("load", () => setTimeout(() => luce.style.cssText += ";opacity:1!important", 500));
     // regolazione fine: clic su un quadratino, poi frecce (1 px) o Maiusc + frecce (5 px)
     let scelto = 0;
-    function scegli(i) { scelto = i; maniglie.forEach((m, k) => m.style.background = k === i ? "#2f7fd0" : "#e8432b"); }
+    function scegli(i) {
+      scelto = i;
+      maniglie.forEach((m, k) => m.style.background = k === i ? "#2f7fd0" : "#e8432b");
+      hl.style.outlineColor = i === 4 ? "#2f7fd0" : "#121110"; hl.style.outlineWidth = i === 4 ? "2px" : "1px";
+    }
     addEventListener("keydown", e => {
       const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
       if (!d) return;
       e.preventDefault(); e.stopPropagation();
       const passo = e.shiftKey ? 5 : 1;
+      if (scelto === 4) { LUCE[0] += d[0] * passo; LUCE[1] += d[1] * passo; mettiLuce(); scrivi(); return; }
       FINESTRA[scelto] = [FINESTRA[scelto][0] + d[0] * passo, FINESTRA[scelto][1] + d[1] * passo];
       const h = maniglie[scelto];
       h.style.left = FINESTRA[scelto][0] / 700 * 100 + "%"; h.style.top = FINESTRA[scelto][1] / 684 * 100 + "%";
@@ -377,7 +402,7 @@
     const ls = $(".ls");
     if (ls && cubo) mm.add({ tel: "(max-width: 900px)", desk: "(min-width: 901px)" }, ctx => {
       ls.classList.add("attiva");
-      posaBio();
+      posaBio(); posaLuce();
       const passi = gsap.utils.toArray(".ls-passo");
       const pallini = $$(".ls-avanzamento i");
       const quote = $$(".ls-segni .quote path"), testiQuote = $$(".ls-segni .quote text");
