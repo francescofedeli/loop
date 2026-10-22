@@ -236,7 +236,8 @@
     const g = new THREE.Group();
     for (const [axis, sign] of [["x", 1], ["x", -1], ["y", 1], ["y", -1]]) {
       const base = axis === "y" && sign < 0;
-      const m = new THREE.Mesh(axis === "x" ? pannelloLato : pannelloOrizz, base ? ferro : alluminio);
+      // anche la base ha il colore della struttura (verniciata come il resto)
+      const m = new THREE.Mesh(axis === "x" ? pannelloLato : pannelloOrizz, alluminio);
       if (axis === "x") { m.rotation.y = Math.PI / 2; m.position.x = sign * (S/2 - T/2); }
       else { m.rotation.x = Math.PI / 2; m.position.y = sign * (S/2 - T/2); }
       // base per prima, poi (dopo lampadina e cornici) i lati, il coperchio per ultimo
