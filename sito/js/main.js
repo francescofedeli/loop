@@ -319,6 +319,45 @@
     f.addEventListener("pointerleave", () => { f.classList.remove("inclinata"); f.style.transform = ""; });
   });
 
+  // foto a tutto schermo: clic su una foto della galleria o delle due luci; frecce per scorrere, Esc per chiudere
+  const apribili = $$(".galleria figure, .apribile");
+  if (apribili.length) {
+    const lb = document.createElement("div");
+    lb.className = "lightbox";
+    lb.setAttribute("role", "dialog");
+    lb.setAttribute("aria-label", "Foto");
+    lb.innerHTML = '<img alt=""><button class="chiudi">Chiudi ✕</button><button class="prec" aria-label="Foto precedente">←</button><button class="succ" aria-label="Foto successiva">→</button><p class="conta"></p>';
+    document.body.append(lb);
+    const img = $("img", lb), conta = $(".conta", lb);
+    let gruppo = [], n = 0;
+    const mostra = k => {
+      n = (k + gruppo.length) % gruppo.length;
+      const src = gruppo[n].querySelector("img");
+      img.src = src.currentSrc || src.src; img.alt = src.alt;
+      conta.textContent = gruppo.length > 1 ? `${n + 1} / ${gruppo.length}` : "";
+      $(".prec", lb).hidden = $(".succ", lb).hidden = gruppo.length < 2;
+    };
+    const chiudi = () => { lb.classList.remove("aperta"); lenis && lenis.start(); };
+    apribili.forEach(f => f.addEventListener("click", e => {
+      if (e.target.closest("a")) return;
+      gruppo = f.closest(".galleria") ? $$(".galleria figure") : $$(".apribile");
+      mostra(gruppo.indexOf(f));
+      lb.classList.add("aperta");
+      lenis && lenis.stop();
+      $(".chiudi", lb).focus({ preventScroll: true });
+    }));
+    $(".chiudi", lb).addEventListener("click", chiudi);
+    $(".prec", lb).addEventListener("click", e => { e.stopPropagation(); mostra(n - 1); });
+    $(".succ", lb).addEventListener("click", e => { e.stopPropagation(); mostra(n + 1); });
+    lb.addEventListener("click", e => { if (e.target === lb) chiudi(); });
+    addEventListener("keydown", e => {
+      if (!lb.classList.contains("aperta")) return;
+      if (e.key === "Escape") chiudi();
+      if (e.key === "ArrowLeft") mostra(n - 1);
+      if (e.key === "ArrowRight") mostra(n + 1);
+    });
+  }
+
   // hero: il cursore è una luce calda
   const hero = $("#hero");
   if (hero && !riduci) hero.addEventListener("pointermove", e => {

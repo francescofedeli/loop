@@ -23,6 +23,7 @@ export function avvia(contenitore) {
 
   // ---- pezzi: misure come la lampada vera (cubo 12 cm, finestra 10 cm) ----
   const S = 12, T = 0.15, W = 10;
+  const RIENTRO = 0.7, F = S - 2 * T - 0.04; // le cornici stanno dentro il cubo, arretrate dal bordo
   const giallo = new THREE.MeshStandardMaterial({ color: 0xf3c300, metalness: .05, roughness: .5 });
   // tutta la struttura è verniciata dello stesso colore (anche base e cornici in ferro)
   const ferro = giallo;
@@ -54,21 +55,21 @@ export function avvia(contenitore) {
     pezzi.push({ mesh, fine, ordine, nome });
     scene.add(mesh);
   };
-  aggiungi(lastra(S - 2 * T - .02, S - .62, ferro), [0, -S / 2 + T / 2, 0], [-Math.PI / 2, 0, 0], 0, "base");
-  aggiungi(conFessure(lastra(S - .62, S, giallo), "x"), [S / 2 - T / 2, 0, 0], [0, Math.PI / 2, 0], .55, "lato");
-  aggiungi(conFessure(lastra(S - .62, S, giallo), "x"), [-S / 2 + T / 2, 0, 0], [0, Math.PI / 2, 0], .62, "lato");
-  aggiungi(conFessure(lastra(S - 2 * T - .02, S - .62, giallo), "y"), [0, S / 2 - T / 2, 0], [-Math.PI / 2, 0, 0], .74, "coperchio");
-  aggiungi(new THREE.Mesh(telaioGeo(S, W, .3), giallo), [0, 0, S / 2 - .15], [0, 0, 0], .38, "cornice");
-  aggiungi(new THREE.Mesh(telaioGeo(S, W, .3), giallo), [0, 0, -S / 2 + .15], [0, Math.PI, 0], .44, "cornice");
-  aggiungi(new THREE.Mesh(telaioGeo(S - .4, W + .6, .12), ferro), [0, 0, S / 2 + .1], [0, 0, 0], .86, "cornice-ferro");
-  aggiungi(new THREE.Mesh(telaioGeo(S - .4, W + .6, .12), ferro), [0, 0, -S / 2 - .1], [0, Math.PI, 0], .92, "cornice-ferro");
+  aggiungi(lastra(S - 2 * T - .02, S, ferro), [0, -S / 2 + T / 2, 0], [-Math.PI / 2, 0, 0], 0, "base");
+  aggiungi(conFessure(lastra(S, S, giallo), "x"), [S / 2 - T / 2, 0, 0], [0, Math.PI / 2, 0], .55, "lato");
+  aggiungi(conFessure(lastra(S, S, giallo), "x"), [-S / 2 + T / 2, 0, 0], [0, Math.PI / 2, 0], .62, "lato");
+  aggiungi(conFessure(lastra(S - 2 * T - .02, S, giallo), "y"), [0, S / 2 - T / 2, 0], [-Math.PI / 2, 0, 0], .74, "coperchio");
+  aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, S / 2 - RIENTRO - .15], [0, 0, 0], .38, "cornice");
+  aggiungi(new THREE.Mesh(telaioGeo(F, W, .3), giallo), [0, 0, -S / 2 + RIENTRO + .15], [0, Math.PI, 0], .44, "cornice");
+  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W + .6, .12), ferro), [0, 0, S / 2 - RIENTRO + .08], [0, 0, 0], .86, "cornice-ferro");
+  aggiungi(new THREE.Mesh(telaioGeo(F - .06, W + .6, .12), ferro), [0, 0, -S / 2 + RIENTRO - .08], [0, Math.PI, 0], .92, "cornice-ferro");
 
   // bioplastica: compare tra cornice e cornice in ferro
   const tex = new THREE.TextureLoader().load("tex/marmo.webp", () => render());
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
   const bioMat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, transparent: true, opacity: 0 });
-  const bio = [S / 2 + .02, -S / 2 - .02].map((z, i) => {
+  const bio = [S / 2 - RIENTRO + .01, -S / 2 + RIENTRO - .01].map((z, i) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(W + .4, W + .4), bioMat);
     m.position.z = z; if (i) m.rotation.y = Math.PI;
     scene.add(m);

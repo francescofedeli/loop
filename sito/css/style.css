@@ -202,7 +202,7 @@ html.intro-on .velo-logo .lettera:nth-child(4) { animation-delay: .36s; }
 }
 
 /* nastro che scorre */
-.nastro { background: var(--giallo); color: var(--nero); overflow: hidden; padding: 16px 0; }
+.nastro-non-usato { background: var(--giallo); color: var(--nero); overflow: hidden; padding: 16px 0; }
 .nastro-traccia { display: flex; width: max-content; animation: nastro 40s linear infinite; }
 .nastro-traccia span { font-family: var(--display); font-weight: 700; font-size: clamp(18px, 2.2vw, 30px); text-transform: uppercase; white-space: nowrap; padding-right: .9em; }
 .nastro-traccia span::after { content: "✦"; font-size: .6em; vertical-align: middle; margin-left: .9em; }
@@ -260,6 +260,8 @@ html.intro-on .velo-logo .lettera:nth-child(4) { animation-delay: .36s; }
 .ls-avanzamento { display: none; }
 
 .ls.attiva .ls-pin { height: 100svh; padding-top: 96px; padding-bottom: 40px; }
+/* il cubo non supera mai l'altezza dello schermo (portatili con schermo basso) */
+.ls.attiva .ls-stage { width: min(100%, calc((100svh - 200px) * .9)); justify-self: center; }
 .ls.attiva .ls-testi { position: relative; height: min(460px, 62svh); display: block; }
 .ls.attiva .ls-passo { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); opacity: 0; visibility: hidden; }
 .ls.attiva .ls-passo:first-child { opacity: 1; visibility: visible; }
@@ -436,3 +438,15 @@ html.intro-on .velo-logo .lettera:nth-child(4) { animation-delay: .36s; }
 .cursore.su-giallo.link { background: transparent; box-shadow: inset 0 0 0 2px var(--nero); }
 .cursore.nascosto { opacity: 0; }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) { .cursore { display: none; } }
+
+/* ---------- foto a tutto schermo ---------- */
+.apribile, .galleria figure { cursor: zoom-in; }
+.lightbox { position: fixed; inset: 0; z-index: 250; background: rgba(10,9,8,.94); display: grid; place-items: center; padding: 64px var(--gutter); opacity: 0; visibility: hidden; transition: opacity .4s, visibility 0s .4s; }
+.lightbox.aperta { opacity: 1; visibility: visible; transition: opacity .4s; }
+.lightbox img { width: auto; height: auto; max-width: calc(100vw - 2 * var(--gutter) - 80px); max-height: calc(100svh - 140px); object-fit: contain; transform: scale(.96); transition: transform .6s var(--ease); }
+.lightbox.aperta img { transform: none; }
+.lightbox button { position: absolute; color: var(--carta); font-family: var(--display); font-weight: 700; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; padding: 14px; }
+.lightbox .chiudi { top: 16px; right: var(--gutter); }
+.lightbox .prec, .lightbox .succ { top: 50%; transform: translateY(-50%); font-size: 28px; }
+.lightbox .prec { left: 8px; } .lightbox .succ { right: 8px; }
+.lightbox .conta { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #bdb7ab; font-size: 13px; }

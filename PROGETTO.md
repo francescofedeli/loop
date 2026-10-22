@@ -74,6 +74,11 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 - 2026-10-23 — Titoli e testi con `text-wrap: balance/pretty`: niente più a capo strani.
 - 2026-10-23 — 3D: **zoom** con la rotella o con due dita; tolta la texture "cielo" (era un doppione sgranato di "marmo"); pois, bolle, pois blu, marmo e corallo ritagliati più stretti (niente bordi vuoti).
 - 2026-10-23 — **Cursore personalizzato**: cerchio giallo che segue il mouse con un leggero ritardo; anello sui link; grande con una parola su galleria ("Guarda") e bollino ("3D"). Solo con il mouse, non su telefono.
+- 2026-10-23 — Pubblicato su **GitHub Pages**: https://francescofedeli.github.io/loop/ (ogni push aggiorna il sito in 1–2 minuti).
+- 2026-10-23 — Bioplastica e luce della sezione "La lampada" **calibrate a mano** dall'utente con lo strumento `index.html?calibra` (valori FINESTRA e LUCE in `js/main.js`). Provata la lampadina disegnata dentro il cubo: ~~lampadina~~ non piaceva, resta solo la luce.
+- 2026-10-23 — **Cornici in rientranza** (come la lampada vera): nel 3D e nel montaggio del kit le cornici stanno dentro il cubo, arretrate di 7 mm dal bordo; lati, base e coperchio sono profondi tutto il cubo.
+- 2026-10-23 — Tolto il nastro di parole dalla home. Le foto della home (galleria e due luci) **si aprono a tutto schermo**. Cubo della sezione lampada ridimensionato sugli schermi bassi (portatili).
+- 2026-10-23 — Pagina progetto **senza i dettagli della tesi** (relatore, scheda, riferimenti): non serve scrivere tutto quello che c'è nella tesi. Anche il footer dice solo "Progetto di tesi in Design, LABA Rimini, 2026".
 - 2026-10-22 — Il sito è statico (HTML/CSS/JS, niente build). GSAP e Three.js da CDN. Si potrà passare a Vite più avanti se serve.
 
 ## Fatto

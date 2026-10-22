@@ -196,13 +196,15 @@
   // ---- Un cubo LOOP: 12 cm, cornici da 1 cm, finestra 10 cm ----
   // 4 lati + coperchio in alluminio, base in ferro (la lampadina magnetica si aggancia lì)
   const S = 12, T = 0.15, W = 10;
-  // i pannelli pieni stanno tra le due cornici, così non si sovrappongono negli spigoli;
-  // base e coperchio stanno tra i due lati (prima si compenetravano e lo spigolo "sfarfallava")
-  const pannelloLato = new THREE.BoxGeometry(S - 0.62, S, T);
-  const pannelloOrizz = new THREE.BoxGeometry(S - 2 * T - 0.02, S - 0.62, T);
+  // lati, base e coperchio formano un tubo profondo tutto il cubo; base e coperchio stanno tra i due lati
+  // (se si compenetrano lo spigolo "sfarfalla"). Le cornici stanno DENTRO il tubo, in rientranza, come nella lampada vera.
+  const RIENTRO = 0.7;                 // di quanto la cornice è arretrata rispetto al bordo
+  const F = S - 2 * T - 0.04;          // lato esterno della cornice: entra giusta nel tubo
+  const pannelloLato = new THREE.BoxGeometry(S, S, T);
+  const pannelloOrizz = new THREE.BoxGeometry(S - 2 * T - 0.02, S, T);
   const telaio = (() => {
     const shape = new THREE.Shape();
-    shape.moveTo(-S/2, -S/2); shape.lineTo(S/2, -S/2); shape.lineTo(S/2, S/2); shape.lineTo(-S/2, S/2);
+    shape.moveTo(-F/2, -F/2); shape.lineTo(F/2, -F/2); shape.lineTo(F/2, F/2); shape.lineTo(-F/2, F/2);
     const hole = new THREE.Path();
     hole.moveTo(-W/2, -W/2); hole.lineTo(-W/2, W/2); hole.lineTo(W/2, W/2); hole.lineTo(W/2, -W/2);
     shape.holes.push(hole);
@@ -256,7 +258,7 @@
       const p = new THREE.Mesh(finestra, bioMat);
       p.position.z = -0.05;
       lato.add(p);
-      lato.position.z = sign * (S/2 - 0.3);
+      lato.position.z = sign * (S/2 - RIENTRO - 0.3);
       if (sign < 0) lato.rotation.y = Math.PI;
       montaggio(lato, 0, 0, sign * 28, 1.05 + (sign < 0 ? 0.2 : 0));
       g.add(lato);
