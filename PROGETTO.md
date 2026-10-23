@@ -17,19 +17,44 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 
 ## Struttura del sito
 
+Cinque pagine. In tutte: header (marchio giallo, "Scopri in 3D", "Menu"), menu a pannello, footer con invito al 3D, transizione con la riga verticale tra le pagine.
+
+**Home — `sito/index.html`** (centrata sul prodotto)
+
 | Sezione | Contenuto | Fonte |
 |---|---|---|
-| Hero | Logo animato, titolo, foto lampada accesa | foto ufficio IMG_9095 |
+| Hero | Lampada al buio, luce che segue il cursore, bollino rotante verso il 3D | foto ufficio IMG_9114 |
 | Manifesto | "Il design non serve solo a creare oggetti…" | testi post social |
-| La lampada | 3 punti (incastro, base in ferro + lampadina magnetica, cornici magnetiche) + esploso con etichette | tesi pp. 165–173 |
-| Due lati, due luci | Davanti: bioplastica in controluce. Dietro: riflesso sul muro. Link al 3D | tesi p. 172 |
-| Cinque colori | Render giallo (★ preferito), alluminio, arancione, bianco, nero | tesi p. 170 |
-| Galleria | Lampade accese, scorrimento orizzontale | foto ufficio |
-| Kit (scroll) | Scatola vista dall'alto: si apre, escono gli ingredienti, poi le 8 lastre, poi compare la lampada montata | tesi p. 178 |
-| Bioplastica | 4 basi testate → scelta la pectina; 4 coloranti naturali | tesi pp. 58–163 |
-| Ricette | 4 passi + 5 schede (base, curcuma, barbabietola, spirulina, spirulina blu) con dosi e osservazioni | tesi pp. 138–157 |
-| Il progetto | Citazione, testo dall'abstract, scheda tesi, 3 riferimenti (Alum Studio, FlatFlat, Teenage Engineering) | abstract + tesi pp. 166–168 |
-| Chi sono | Testo breve + link | da completare |
+| La lampada — "Un cubo di luce" | Scena della lampada con i suoi punti chiave | tesi pp. 165–173 |
+| Due luci — "La stessa luce, due esperienze" | Davanti: bioplastica in controluce. Dietro: riflesso sul muro | tesi p. 172 |
+| Galleria — "Sei tu a scegliere colore e fantasia" | Lampade accese, scorrimento orizzontale | foto ufficio |
+| Anteprima kit — "Tutto in una scatola" | Rimando alla pagina Kit | tesi p. 178 |
+| "C'è molto di più" | Schede verso Bioplastica e Progetto | — |
+
+**Kit — `sito/kit.html`**
+
+| Sezione | Contenuto | Fonte |
+|---|---|---|
+| "Apri la scatola" | La scatola si apre come nella foto vera, poi il montaggio in 3D un pezzo alla volta, comandato dallo scroll | tesi p. 178, foto IMG_9069 |
+| "Cosa c'è nel kit" | Elenco del contenuto | tesi p. 178 |
+
+**Bioplastica — `sito/bioplastica.html`**
+
+| Sezione | Contenuto | Fonte |
+|---|---|---|
+| "Acqua, una base, un plastificante" | 4 basi testate → scelta la pectina; 4 coloranti naturali | tesi pp. 58–163 |
+| Ricette — "Dal pentolino alla lampada" | Passi + schede (base, curcuma, barbabietola, spirulina, spirulina blu) con dosi e osservazioni | tesi pp. 138–157 |
+
+**Progetto — `sito/progetto.html`**
+
+| Sezione | Contenuto | Fonte |
+|---|---|---|
+| "Educare alla sostenibilità attraverso il design" | Citazione, testo dall'abstract, riferimenti (Alum Studio, FlatFlat, Teenage Engineering) | abstract + tesi pp. 166–168 |
+| Chi sono — "Ciao, sono Atena" | Testo breve, email, Instagram, TikTok | — |
+
+**Scopri la lampada — `sito/lampada.html`**
+
+Lampada 3D a tutto schermo: si gira, cursore dell'intensità, bioplastiche, colori della struttura, impila, monta.
 
 ## Reference
 
@@ -82,6 +107,7 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 - 2026-10-23 — 3D: con "Impila" attivo il pulsante "Montala" è disattivato.
 - 2026-10-23 — Kit, montaggio 3D: ~~pezzi che partono quasi insieme e si attraversano~~ → **un pezzo alla volta** come nel video (base, lampadina, cornici, bioplastica e cornici in ferro, lati, coperchio), ognuno si porta fuori dal cubo dal suo lato e poi scivola dentro.
 - 2026-10-22 — Il sito è statico (HTML/CSS/JS, niente build). GSAP e Three.js da CDN. Si potrà passare a Vite più avanti se serve.
+- 2026-10-23 — **Repository GitHub reso pubblico** (https://github.com/francescofedeli/loop): il codice è visibile a tutti. Il sito è pubblicato con **GitHub Pages**: **https://francescofedeli.github.io/loop/** (la `index.html` nella radice reindirizza a `sito/`). Ogni push su `main` aggiorna il sito online in un paio di minuti.
 
 ## Fatto
 
@@ -133,7 +159,8 @@ Per vederlo: `python3 -m http.server 8765` e http://localhost:8765/sito/index.ht
 - [ ] 3D: lampadina visibile anche a lampada montata (ora si vede solo durante il montaggio; le bioplastiche sono opache)
 - [ ] Valutare il modello Rhino (.obj) compresso al posto della lampada costruita nel codice (probabilmente non serve)
 - [ ] Test prestazioni (Lighthouse, telefono economico) e accessibilità
-- [ ] Pubblicazione online (GitHub Pages / Netlify / Vercel) e dominio
+- [x] 2026-10-23 — Pubblicazione online con GitHub Pages: https://francescofedeli.github.io/loop/
+- [ ] Dominio personalizzato (opzionale)
 - [ ] Favicon e immagine di anteprima per i social (og:image)
 
 ## File e cartelle
