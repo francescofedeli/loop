@@ -140,6 +140,8 @@ Lampada 3D a tutto schermo: si gira, cursore dell'intensità, bioplastiche, colo
 - [ ] Le altre sezioni (bioplastica, ricette, progetto, chi sono) sono ancora "statiche": rivederle con lo stesso spirito
 
 ### Materiali che mancano
+_2026-10-23 — Inviata ad Atena la lista completa (in attesa di risposta): ritratto; foto frontali delle bioplastiche (luce sopra + controluce); pezzi della struttura; video montaggio originale; altre foto lampada accesa; link TikTok; facoltativi: foto bambini col kit (con permesso), commenti di docenti. Domande: rilettura testi e ricette, testo "Chi sono", video nel sito sì/no, pagina sperimentazioni (+ foto campioni), dominio personalizzato, immagine copertina per i social._
+
 - [ ] Foto ritratto per "Chi sono" (ora c'è un riquadro segnaposto)
 - [x] 2026-10-23 — Email: atenatomasetti@gmail.com (in menu, footer e Chi sono)
 - [x] 2026-10-23 — Instagram: https://www.instagram.com/atena.tomasetti/
@@ -152,6 +154,7 @@ Lampada 3D a tutto schermo: si gira, cursore dell'intensità, bioplastiche, colo
 - [ ] Da telefono, nella pagina 3D e nel 3D della pagina kit "c'è qualcosa sullo sfondo che cambia con la bioplastica": da capire con uno screenshot
 
 ### Sviluppo
+- [ ] 2026-10-23 — **Laboratorio** (`sito/laboratorio.html`, non nel menu): 22 effetti presi da Awwwards e da altre reference (Apple, Obys, Aesop, Pantone, Patatap, Bruno Simon…) rifatti con i contenuti LOOP: tra gli altri foto che si allarga, scia di immagini, carte impilate, interruttore, torcia, telecomando, mazzetta di bioplastiche, spenta/accesa, monta tu la lampada, lettere che cadono. Da scegliere con l'utente quali portare nel sito.
 - [ ] Lampada 3D: transizioni morbide tra texture/colori, lampadina visibile dentro, sovrapposizione di due bioplastiche (idea dalla tesi p. 172)
 - [ ] Pagina con **tutte** le sperimentazioni della tesi (gelatina, agar-agar, amido, pectina: >60 campioni)
 - [ ] Ricette: eventuale filtro per colore

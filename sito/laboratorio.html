@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratorio — LOOP</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<!-- pagina di prova (non nel menu): effetti visti su Awwwards rifatti con i contenuti di LOOP.
+     Ogni sezione è indipendente: se un effetto piace, si porta nel sito. -->
+<style>
+  body { transition: background-color .6s var(--ease); }
+  .lab-testa { padding: 18vh var(--gutter) 10vh; max-width: var(--max); margin: 0 auto; }
+  .lab-testa ol { margin-top: 40px; columns: 2 260px; list-style: none; counter-reset: n; }
+  .lab-testa li { counter-increment: n; padding: 6px 0; border-bottom: 1px solid var(--linea); }
+  .lab-testa li::before { content: counter(n, decimal-leading-zero) "  "; font-weight: 800; }
+  .lab-testa a { text-decoration: none; }
+  .nota { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 22px var(--gutter); border-top: 2px solid var(--nero); font-size: 14px; position: relative; z-index: 2; }
+  .nota b { font-family: var(--display); font-size: 15px; }
+  .scuro { background: var(--nero); color: var(--carta); }
+  .scuro .nota { border-color: var(--giallo); }
+
+  /* 01 zoom */
+  .zoom { height: 100vh; position: relative; overflow: hidden; display: grid; place-items: center; }
+  .zoom-img { position: absolute; inset: 0; clip-path: inset(32% 36% round 24px); will-change: clip-path; }
+  .zoom-img img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.3); }
+  .zoom h2 { position: relative; z-index: 1; color: var(--carta); mix-blend-mode: difference; text-align: center; }
+
+  /* 02 testo-maschera */
+  .maschera { min-height: 90vh; display: grid; place-items: center; overflow: hidden; cursor: crosshair; }
+  .maschera span { font-family: var(--display); font-weight: 700; font-size: 31vw; line-height: .8;
+    background: url(tex/marmo.webp) 50% 50% / 60vw; -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* 03 scia */
+  .scia { height: 90vh; position: relative; overflow: hidden; display: grid; place-items: center; }
+  .scia p { font-family: var(--display); font-size: clamp(28px, 5vw, 72px); opacity: .25; pointer-events: none; text-align: center; }
+  .scia img { position: absolute; width: clamp(120px, 14vw, 220px); aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; pointer-events: none; translate: -50% -50%; }
+
+  /* 04 nastro con velocità */
+  .nastro { padding: 12vh 0; overflow: hidden; background: var(--giallo); }
+  .riga { display: flex; white-space: nowrap; font-family: var(--display); font-size: clamp(48px, 9vw, 150px); line-height: 1.05; will-change: transform; }
+  .riga span { padding-right: .4em; }
+  .riga.vuota { color: transparent; -webkit-text-stroke: 2px var(--nero); }
+
+  /* 05 lista con immagine */
+  .lista { padding: 10vh var(--gutter); max-width: var(--max); margin: 0 auto; }
+  .lista a { display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--linea); text-decoration: none; transition: padding .4s var(--ease), color .3s; }
+  .lista a:hover { padding-left: 24px; }
+  .lista a span:first-child { font-family: var(--display); font-size: clamp(28px, 5vw, 72px); }
+  .lista:hover a:not(:hover) { color: var(--grigio); }
+  .fluttua { position: fixed; left: 0; top: 0; width: 280px; aspect-ratio: 4/5; pointer-events: none; z-index: 5; opacity: 0; scale: .6; transition: opacity .3s, scale .4s var(--ease); border-radius: 8px; overflow: hidden; }
+  .fluttua.on { opacity: 1; scale: 1; }
+  .fluttua img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* 06 carte impilate */
+  .pila { padding: 10vh var(--gutter) 30vh; max-width: 980px; margin: 0 auto; }
+  .carta { position: sticky; top: calc(12vh + var(--i) * 26px); height: 66vh; border-radius: 22px; padding: clamp(24px, 4vw, 56px); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; margin-bottom: 8vh; transform-origin: 50% 0; box-shadow: 0 -10px 40px rgba(0,0,0,.08); }
+  .carta img { width: 100%; height: 100%; max-height: 50vh; object-fit: contain; }
+  .carta .num { font-family: var(--display); font-size: 80px; line-height: 1; }
+  @media (max-width: 700px) { .carta { grid-template-columns: 1fr; height: 72vh; } .carta img { max-height: 30vh; } }
+
+  /* 07 trascina */
+  .trascina { padding: 10vh 0; overflow: hidden; cursor: grab; user-select: none; touch-action: pan-y; }
+  .trascina:active { cursor: grabbing; }
+  .binario { display: flex; gap: 3vw; padding: 0 var(--gutter); width: max-content; will-change: transform; }
+  .binario figure { width: clamp(220px, 28vw, 400px); }
+  .binario img { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--carta-2); border-radius: 14px; pointer-events: none; }
+  .binario figcaption { margin-top: 10px; font-weight: 800; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* 08 magneti + testo che si mescola */
+  .magneti { min-height: 70vh; display: flex; flex-wrap: wrap; gap: 4vw; align-items: center; justify-content: center; padding: 10vh var(--gutter); }
+  .magnete { width: 190px; height: 190px; border-radius: 50%; background: var(--giallo); color: var(--nero); font-family: var(--display); font-size: 15px; display: grid; place-items: center; text-align: center; }
+  .magnete.nero { background: var(--nero); color: var(--giallo); }
+  .magnete span { pointer-events: none; display: block; }
+  .mescola { font-family: var(--display); font-size: clamp(32px, 6vw, 90px); width: 100%; text-align: center; cursor: default; }
+
+  /* 09 colori allo scroll */
+  .colori section { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 4vw; padding: 0 var(--gutter); max-width: var(--max); margin: 0 auto; }
+  .colori img { max-height: 70vh; width: auto; margin: auto; }
+  @media (max-width: 700px) { .colori section { grid-template-columns: 1fr; } }
+
+  /* 10 interruttore */
+  .buio { height: 100vh; position: relative; overflow: hidden; background: #050505; display: grid; place-items: center; }
+  .accesa { position: absolute; inset: 0; clip-path: circle(0% at 50% 50%); transition: clip-path 1.4s var(--ease-forte); }
+  .accesa img { width: 100%; height: 100%; object-fit: cover; }
+  .buio.on .accesa { clip-path: circle(150% at 50% 50%); }
+  .interruttore { position: relative; z-index: 1; width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--giallo); color: var(--giallo); font-family: var(--display); font-size: 14px; box-shadow: 0 0 0 0 rgba(243,195,0,.5); animation: pulsa 2s infinite; transition: background .4s, color .4s; }
+  .buio.on .interruttore { background: var(--giallo); color: var(--nero); animation: none; }
+  @keyframes pulsa { to { box-shadow: 0 0 0 30px rgba(243,195,0,0); } }
+
+  /* 11 tendine */
+  .tendine { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3vw; padding: 10vh var(--gutter); }
+  .tendina { overflow: hidden; clip-path: inset(100% 0 0 0); aspect-ratio: 3/4; }
+  .tendina img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.4); }
+  .tendine figcaption { margin-top: 10px; font-weight: 800; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+  @media (max-width: 700px) { .tendine { grid-template-columns: 1fr; } }
+
+  /* 12 torcia */
+  .torcia { height: 90vh; position: relative; overflow: hidden; display: grid; place-items: center; background: url(tex/aurora.webp) center / cover; cursor: none; }
+  .torcia::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle 160px at var(--x, 50%) var(--y, 50%), transparent 0, rgba(5,5,5,.96) 100%); }
+  .torcia .lente { position: absolute; left: var(--x, 50%); top: var(--y, 50%); width: 320px; height: 320px; translate: -50% -50%; border-radius: 50%; background: url(tex/aurora.webp) no-repeat; background-size: 250%; background-position: var(--bx, 50%) var(--by, 50%); border: 1px solid rgba(243,195,0,.5); pointer-events: none; }
+  .torcia p { position: relative; color: var(--carta); opacity: .5; pointer-events: none; }
+
+  /* 13 telecomando */
+  .tele { min-height: 90vh; display: grid; grid-template-columns: 1fr auto; gap: 6vw; align-items: center; padding: 8vh var(--gutter); }
+  .tele-luce { position: relative; display: grid; place-items: center; }
+  .tele-luce::before { content: ""; position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%; background: var(--luce, #fff8e0); filter: blur(80px); opacity: .55; transition: background .5s; }
+  .tele-luce img { position: relative; max-height: 60vh; width: auto; }
+  .tele-tasti { display: grid; gap: 14px; padding: 26px 20px; background: #f4f1ea; border-radius: 40px; }
+  .tele-tasti button { width: 54px; height: 54px; border-radius: 50%; background: var(--c); box-shadow: 0 5px 0 rgba(0,0,0,.25); transition: transform .1s, box-shadow .1s; }
+  .tele-tasti button:active, .tele-tasti button.giu { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
+
+  /* 14 sequenza */
+  .sequenza { height: 400vh; }
+  .seq-scena { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; align-content: center; gap: 16px; }
+  .seq-scena img { max-height: 65vh; width: auto; }
+
+  /* 15 mazzetta */
+  .mazzetta { height: 90vh; display: grid; place-items: center; overflow: hidden; }
+  .ventaglio { position: relative; width: 140px; height: 420px; }
+  .campione { position: absolute; inset: 0; border-radius: 12px; background: #fff; padding: 10px 10px 40px; transform-origin: 50% 92%; box-shadow: 0 6px 20px rgba(0,0,0,.15); transition: transform .7s var(--ease); cursor: pointer; }
+  .campione div { width: 100%; height: 100%; border-radius: 6px; background-size: cover; background-position: center; }
+  .campione small { position: absolute; bottom: 12px; left: 12px; font-weight: 800; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+
+  /* 16 stira */
+  .stira { padding: 20vh var(--gutter); text-align: center; overflow: hidden; }
+  .stira p { font-size: clamp(48px, 11vw, 190px); line-height: .9; transform-origin: 50% 50%; will-change: transform; }
+
+  /* 17 colonne */
+  .colonne { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; padding: 20vh var(--gutter); overflow: hidden; }
+  .colonne div { display: grid; gap: 2vw; }
+  .colonne img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; }
+
+  /* 18 divisa */
+  .divisa { display: grid; grid-template-columns: 1fr 1fr; gap: 5vw; padding: 0 var(--gutter); max-width: var(--max); margin: 0 auto; }
+  .divisa-foto { position: sticky; top: 10vh; height: 80vh; border-radius: 14px; overflow: hidden; }
+  .divisa-foto img { width: 100%; height: 100%; object-fit: cover; transition: opacity .4s; }
+  .divisa-testi article { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; gap: 14px; opacity: .25; transition: opacity .5s; }
+  .divisa-testi article.on { opacity: 1; }
+  @media (max-width: 700px) { .divisa { grid-template-columns: 1fr; } .divisa-foto { top: 8vh; height: 40vh; z-index: 1; } .divisa-testi article { min-height: 60vh; } }
+
+  /* 19 confronto */
+  .confronto { position: relative; height: 90vh; overflow: hidden; cursor: ew-resize; touch-action: pan-y; --p: 50%; }
+  .confronto > img, .conf-buio img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .conf-buio { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--p)); }
+  .conf-maniglia { position: absolute; top: 0; bottom: 0; left: var(--p); width: 2px; background: var(--giallo); }
+  .conf-maniglia span { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 56px; height: 56px; border-radius: 50%; background: var(--giallo); display: grid; place-items: center; font-weight: 800; }
+
+  /* 20 numeri */
+  .numeri { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3vw; padding: 16vh var(--gutter); }
+  .numeri b { display: block; font-family: var(--display); font-size: clamp(56px, 9vw, 150px); color: var(--giallo); line-height: 1; }
+  @media (max-width: 700px) { .numeri { grid-template-columns: 1fr 1fr; } }
+
+  /* 21 monta */
+  .monta { min-height: 90vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 4vw; padding: 8vh var(--gutter); position: relative; }
+  .monta-cubo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; background: var(--giallo); border-radius: 10px; width: min(420px, 80vw); margin: auto; }
+  .finestra { aspect-ratio: 1; border: 2px dashed rgba(0,0,0,.4); border-radius: 4px; background-size: cover; transition: border-color .3s; }
+  .finestra.vicina { border-color: var(--nero); border-style: solid; }
+  .monta-pezzi { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+  .pezzo { width: 110px; aspect-ratio: 1; border-radius: 4px; background-size: cover; cursor: grab; touch-action: none; box-shadow: 0 6px 16px rgba(0,0,0,.2); position: relative; z-index: 2; }
+  .monta-fatto { position: absolute; bottom: 6vh; left: 0; right: 0; text-align: center; font-family: var(--display); opacity: 0; transition: opacity .5s; }
+  .monta.finita .monta-fatto { opacity: 1; }
+  @media (max-width: 700px) { .monta { grid-template-columns: 1fr; } .pezzo { width: 80px; } }
+
+  /* 22 cadono */
+  .cadono { height: 80vh; position: relative; overflow: hidden; background: var(--giallo); touch-action: none; }
+  .cadono span { position: absolute; top: 0; font-family: var(--display); font-weight: 700; font-size: clamp(90px, 16vw, 260px); line-height: 1; cursor: grab; user-select: none; }
+
+  .fine { padding: 20vh var(--gutter); text-align: center; }
+</style>
+</head>
+<body>
+
+<header class="lab-testa">
+  <p class="etichetta trattino">Pagina di prova, non è nel menu</p>
+  <h1 class="display h1">Laboratorio</h1>
+  <p class="lead" style="max-width:640px;margin-top:24px">Gli effetti che si vedono più spesso nei siti premiati su Awwwards, rifatti con le foto e i testi di LOOP. Scegliamo quelli che ci piacciono e li portiamo nel sito.</p>
+  <ol>
+    <li><a href="#e1">Foto che si allarga allo scroll</a></li>
+    <li><a href="#e2">Testo riempito di bioplastica</a></li>
+    <li><a href="#e3">Scia di immagini dietro al mouse</a></li>
+    <li><a href="#e4">Nastro che accelera con lo scroll</a></li>
+    <li><a href="#e5">Lista con immagine che segue</a></li>
+    <li><a href="#e6">Carte che si impilano</a></li>
+    <li><a href="#e7">Galleria da trascinare</a></li>
+    <li><a href="#e8">Pulsanti magnetici e testo che si mescola</a></li>
+    <li><a href="#e9">Lo sfondo cambia colore</a></li>
+    <li><a href="#e10">Interruttore che accende la pagina</a></li>
+    <li><a href="#e11">Foto che si scoprono a tendina</a></li>
+    <li><a href="#e12">Torcia sul materiale</a></li>
+    <li><a href="#e13">Telecomando che cambia la luce</a></li>
+    <li><a href="#e14">Sequenza allo scroll</a></li>
+    <li><a href="#e15">Mazzetta di bioplastiche</a></li>
+    <li><a href="#e16">Testo che si allunga</a></li>
+    <li><a href="#e17">Colonne a velocità diverse</a></li>
+    <li><a href="#e18">Immagine ferma, testo che scorre</a></li>
+    <li><a href="#e19">Spenta / accesa</a></li>
+    <li><a href="#e20">Numeri che contano</a></li>
+    <li><a href="#e21">Monta tu la lampada</a></li>
+    <li><a href="#e22">Lettere che cadono</a></li>
+  </ol>
+</header>
+
+<!-- 01 -->
+<div id="e1">
+  <div class="nota"><b>01 — Foto che si allarga</b><span>Un riquadro piccolo diventa tutto schermo scorrendo. Molto usato per aprire un prodotto (Apple, studi di design).</span></div>
+  <section class="zoom">
+    <div class="zoom-img"><img src="img/hero-buio.webp" alt=""></div>
+    <h2 class="display h1">Un cubo<br>di luce</h2>
+  </section>
+</div>
+
+<!-- 02 -->
+<div id="e2">
+  <div class="nota"><b>02 — Testo di bioplastica</b><span>La texture vera dentro le lettere; muovi il mouse, la bioplastica scorre. Leggerissimo (solo CSS).</span></div>
+  <section class="maschera" id="maschera"><span>LUCE</span></section>
+</div>
+
+<!-- 03 -->
+<div id="e3" class="scuro">
+  <div class="nota"><b>03 — Scia di immagini</b><span>Muovi il mouse qui sotto: lascia dietro di sé le lampade. Tipico dei portfolio di studi creativi.</span></div>
+  <section class="scia" id="scia"><p>Sei tu a scegliere<br>colore e fantasia</p></section>
+</div>
+
+<!-- 04 -->
+<div id="e4">
+  <div class="nota"><b>04 — Nastro con velocità</b><span>Scorre da solo; se scorri veloce accelera e si inclina.</span></div>
+  <section class="nastro">
+    <div class="riga" data-dir="-1"><span>Pectina · Curcuma · Spirulina · Barbabietola ·</span><span>Pectina · Curcuma · Spirulina · Barbabietola ·</span></div>
+    <div class="riga vuota" data-dir="1"><span>Impila · Accendi · Cambia · Crea ·</span><span>Impila · Accendi · Cambia · Crea ·</span></div>
+  </section>
+</div>
+
+<!-- 05 -->
+<div id="e5">
+  <div class="nota"><b>05 — Lista con immagine</b><span>Passa sopra le ricette: la foto segue il cursore. Ottimo per la pagina Bioplastica.</span></div>
+  <section class="lista" id="lista">
+    <a href="bioplastica.html" data-img="img/ric-base.webp"><span>Base</span><span>Pectina</span></a>
+    <a href="bioplastica.html" data-img="img/ric-curcuma.webp"><span>Curcuma</span><span>Giallo</span></a>
+    <a href="bioplastica.html" data-img="img/ric-barbabietola.webp"><span>Barbabietola</span><span>Rosso</span></a>
+    <a href="bioplastica.html" data-img="img/ric-spirulina.webp"><span>Spirulina</span><span>Verde</span></a>
+    <a href="bioplastica.html" data-img="img/ric-spirulina-blu.webp"><span>Spirulina blu</span><span>Blu</span></a>
+  </section>
+  <div class="fluttua" id="fluttua"><img alt=""></div>
+</div>
+
+<!-- 06 -->
+<div id="e6">
+  <div class="nota"><b>06 — Carte che si impilano</b><span>I passi si sovrappongono scorrendo, quelli sotto rimpiccioliscono. Adatto al "come si monta" del kit.</span></div>
+  <section class="pila">
+    <article class="carta" style="--i:0;background:var(--giallo)"><div><p class="num">01</p><h3 class="display h3">Prepara la bioplastica</h3><p>Acqua, pectina e glicerina in un pentolino, poi il colore naturale.</p></div><img src="img/ric-curcuma.webp" alt=""></article>
+    <article class="carta" style="--i:1;background:var(--carta-2)"><div><p class="num">02</p><h3 class="display h3">Lasciala asciugare</h3><p>Stesa nello stampo, diventa una lastra sottile e traslucida.</p></div><img src="img/dett-barbabietola.webp" alt=""></article>
+    <article class="carta" style="--i:2;background:var(--nero);color:var(--carta)"><div><p class="num">03</p><h3 class="display h3">Monta il cubo</h3><p>Lastre, incastri e calamite: niente colla, niente attrezzi.</p></div><img src="img/esploso.webp" alt=""></article>
+    <article class="carta" style="--i:3;background:var(--kraft)"><div><p class="num">04</p><h3 class="display h3">Accendi</h3><p>La luce attraversa la bioplastica e colora il muro.</p></div><img src="img/lampada-corallo.webp" alt=""></article>
+  </section>
+</div>
+
+<!-- 07 -->
+<div id="e7">
+  <div class="nota"><b>07 — Galleria da trascinare</b><span>Si prende e si lancia, con inerzia (anche col dito su telefono).</span></div>
+  <section class="trascina" id="trascina">
+    <div class="binario" id="binario">
+      <figure><img src="img/cubo-giallo.webp" alt=""><figcaption>Giallo</figcaption></figure>
+      <figure><img src="img/cubo-arancione.webp" alt=""><figcaption>Arancione</figcaption></figure>
+      <figure><img src="img/cubo-bianco.webp" alt=""><figcaption>Bianco</figcaption></figure>
+      <figure><img src="img/cubo-nero.webp" alt=""><figcaption>Nero</figcaption></figure>
+      <figure><img src="img/cubo-alluminio.webp" alt=""><figcaption>Alluminio</figcaption></figure>
+      <figure><img src="img/lampada-rossa.webp" alt="" style="object-fit:cover"><figcaption>Rossa</figcaption></figure>
+      <figure><img src="img/lampada-cielo.webp" alt="" style="object-fit:cover"><figcaption>Cielo</figcaption></figure>
+    </div>
+  </section>
+</div>
+
+<!-- 08 -->
+<div id="e8">
+  <div class="nota"><b>08 — Magneti e testo che si mescola</b><span>I pulsanti vengono verso il mouse; il titolo si "rimescola" quando ci passi sopra.</span></div>
+  <section class="magneti">
+    <p class="mescola" data-testo="Educare con il design">Educare con il design</p>
+    <a class="magnete" href="lampada.html"><span>Scopri<br>in 3D</span></a>
+    <a class="magnete nero" href="kit.html"><span>Apri la<br>scatola</span></a>
+  </section>
+</div>
+
+<!-- 09 -->
+<div id="e9" class="colori">
+  <div class="nota"><b>09 — Lo sfondo cambia colore</b><span>Scorrendo, la pagina prende il colore della struttura. Le sezioni si fondono una nell'altra.</span></div>
+  <section data-sfondo="#f3c300"><h2 class="display h2">Giallo</h2><img src="img/cubo-giallo.webp" alt=""></section>
+  <section data-sfondo="#e8833a"><h2 class="display h2">Arancione</h2><img src="img/cubo-arancione.webp" alt=""></section>
+  <section data-sfondo="#ffffff"><h2 class="display h2">Bianco</h2><img src="img/cubo-bianco.webp" alt=""></section>
+  <section data-sfondo="#121110" style="color:var(--carta)"><h2 class="display h2">Nero</h2><img src="img/cubo-nero.webp" alt=""></section>
+  <section data-sfondo="#c9cbcc"><h2 class="display h2">Alluminio</h2><img src="img/cubo-alluminio.webp" alt=""></section>
+</div>
+
+<!-- 10 -->
+<div id="e10">
+  <div class="nota"><b>10 — Interruttore che accende la pagina</b><span>Visto su siti di lampade (ATMOS, Daylight): la pagina è al buio, premi e si accende con la luce che si espande.</span></div>
+  <section class="buio" id="buio">
+    <div class="accesa"><img src="img/hero.webp" alt=""></div>
+    <button class="interruttore" id="interruttore" aria-pressed="false"><span>Accendi</span></button>
+  </section>
+</div>
+
+<!-- 11 -->
+<div id="e11">
+  <div class="nota"><b>11 — Foto che si scoprono a tendina</b><span>Ogni immagine si apre dal basso quando entra nello schermo, con un leggero zoom. Classico dei siti di moda e d'arredo.</span></div>
+  <section class="tendine">
+    <figure><div class="tendina"><img src="img/kit-aperto.webp" alt=""></div><figcaption>Il kit aperto</figcaption></figure>
+    <figure><div class="tendina"><img src="img/lampada-pois-luce.webp" alt=""></div><figcaption>Pois in controluce</figcaption></figure>
+    <figure><div class="tendina"><img src="img/scatole.webp" alt=""></div><figcaption>Le scatole</figcaption></figure>
+  </section>
+</div>
+
+<!-- 12 -->
+<div id="e12" class="scuro">
+  <div class="nota"><b>12 — Torcia sul materiale</b><span>Come nei siti di gioielli e materiali (Cartier): al buio, il cursore illumina e ingrandisce la bioplastica.</span></div>
+  <section class="torcia" id="torcia"><div class="lente"></div><p class="display h2">Guarda da vicino</p></section>
+</div>
+
+<!-- 13 -->
+<div id="e13" class="scuro">
+  <div class="nota"><b>13 — Telecomando</b><span>Ispirato a Patatap e Teenage Engineering: premi i tasti (o 1–5 sulla tastiera) e la luce cambia colore.</span></div>
+  <section class="tele">
+    <div class="tele-luce" id="tele-luce"><img src="img/cubo-bianco.webp" alt=""></div>
+    <div class="tele-tasti" id="tele-tasti">
+      <button style="--c:#f3c300" aria-label="Giallo"></button><button style="--c:#ff5a3c" aria-label="Rosso"></button>
+      <button style="--c:#3cc8ff" aria-label="Azzurro"></button><button style="--c:#6cdc6c" aria-label="Verde"></button>
+      <button style="--c:#c86cff" aria-label="Viola"></button>
+    </div>
+  </section>
+</div>
+
+<!-- 14 -->
+<div id="e14">
+  <div class="nota"><b>14 — Sequenza allo scroll</b><span>Come le pagine prodotto Apple: le immagini cambiano scorrendo come un video. Qui con i 5 colori; con le foto del montaggio diventa il montaggio vero.</span></div>
+  <section class="sequenza" id="sequenza">
+    <div class="seq-scena"><img id="seq-img" src="img/cubo-giallo.webp" alt=""><p class="display h3" id="seq-nome">Giallo</p></div>
+  </section>
+</div>
+
+<!-- 15 -->
+<div id="e15">
+  <div class="nota"><b>15 — Mazzetta di bioplastiche</b><span>Come una mazzetta Pantone: passa sopra e i campioni si aprono a ventaglio; clicca per tirarne fuori uno.</span></div>
+  <section class="mazzetta"><div class="ventaglio" id="ventaglio"></div></section>
+</div>
+
+<!-- 16 -->
+<div id="e16">
+  <div class="nota"><b>16 — Testo che si allunga</b><span>Come Obys: le lettere si stirano in verticale quando scorri veloce.</span></div>
+  <section class="stira"><p class="display" id="stira">Bioplastica<br>fatta a mano</p></section>
+</div>
+
+<!-- 17 -->
+<div id="e17">
+  <div class="nota"><b>17 — Colonne a velocità diverse</b><span>Come Studio Freight e Locomotive: le colonne di foto scorrono una più veloce dell'altra.</span></div>
+  <section class="colonne">
+    <div data-v="-120"><img src="img/lampada-corallo.webp" alt=""><img src="img/ric-curcuma.webp" alt=""><img src="img/lampada-rossa.webp" alt=""></div>
+    <div data-v="120"><img src="img/kit-mano.webp" alt=""><img src="img/lampada-cielo.webp" alt=""><img src="img/ric-spirulina.webp" alt=""></div>
+    <div data-v="-60"><img src="img/lampada-magenta.webp" alt=""><img src="img/scatola-chiusa.webp" alt=""><img src="img/lampada-pois-rosa.webp" alt=""></div>
+  </section>
+</div>
+
+<!-- 18 -->
+<div id="e18">
+  <div class="nota"><b>18 — Immagine ferma, testo che scorre</b><span>Come Aesop: a sinistra la foto resta ferma e cambia, a destra scorrono gli ingredienti.</span></div>
+  <section class="divisa">
+    <div class="divisa-foto"><img id="div-img" src="img/ric-base.webp" alt=""></div>
+    <div class="divisa-testi">
+      <article data-img="img/ric-base.webp"><p class="etichetta">Base</p><h3 class="display h2">Pectina</h3><p>Dalla buccia della frutta: si scioglie in acqua calda e diventa una lastra.</p></article>
+      <article data-img="img/ric-curcuma.webp"><p class="etichetta">Colore</p><h3 class="display h2">Curcuma</h3><p>Un cucchiaino basta per un giallo caldo e luminoso.</p></article>
+      <article data-img="img/ric-barbabietola.webp"><p class="etichetta">Colore</p><h3 class="display h2">Barbabietola</h3><p>Rosso intenso che in controluce diventa rosa.</p></article>
+      <article data-img="img/ric-spirulina-blu.webp"><p class="etichetta">Colore</p><h3 class="display h2">Spirulina blu</h3><p>Un'alga: il blu più freddo della collezione.</p></article>
+    </div>
+  </section>
+</div>
+
+<!-- 19 -->
+<div id="e19">
+  <div class="nota"><b>19 — Spenta / accesa</b><span>Trascina la linea: a sinistra la lampada di giorno, a destra al buio. Usato nei siti di illuminazione e di architettura.</span></div>
+  <section class="confronto" id="confronto">
+    <img src="img/hero.webp" alt="Lampada di giorno">
+    <div class="conf-buio"><img src="img/hero-buio.webp" alt="Lampada al buio"></div>
+    <div class="conf-maniglia"><span>↔</span></div>
+  </section>
+</div>
+
+<!-- 20 -->
+<div id="e20" class="scuro">
+  <div class="nota"><b>20 — Numeri che contano</b><span>I numeri del progetto salgono quando entrano nello schermo.</span></div>
+  <section class="numeri">
+    <div><b data-n="60">0</b><span>campioni sperimentati</span></div>
+    <div><b data-n="4">0</b><span>basi testate</span></div>
+    <div><b data-n="12">0</b><span>cm per lato</span></div>
+    <div><b data-n="5">0</b><span>colori della struttura</span></div>
+  </section>
+</div>
+
+<!-- 21 -->
+<div id="e21">
+  <div class="nota"><b>21 — Monta tu la lampada</b><span>Come un gioco (Bruno Simon, Lego): trascina le bioplastiche nelle finestre del cubo.</span></div>
+  <section class="monta" id="monta">
+    <div class="monta-cubo">
+      <div class="finestra" data-f="0"></div><div class="finestra" data-f="1"></div>
+      <div class="finestra" data-f="2"></div><div class="finestra" data-f="3"></div>
+    </div>
+    <div class="monta-pezzi" id="monta-pezzi"></div>
+    <p class="monta-fatto" id="monta-fatto">Fatto! La tua lampada è unica.</p>
+  </section>
+</div>
+
+<!-- 22 -->
+<div id="e22">
+  <div class="nota"><b>22 — Lettere che cadono</b><span>Le lettere di LOOP cadono e rimbalzano quando arrivi; trascinale e lanciale.</span></div>
+  <section class="cadono" id="cadono">
+    <span>L</span><span>O</span><span>O</span><span>P</span>
+  </section>
+</div>
+
+<div class="fine"><p class="etichetta">Fine del laboratorio</p><a href="index.html" class="display h3">Torna al sito</a></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const fermo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mouse = matchMedia("(pointer: fine)").matches;
+
+// scroll fluido
+const lenis = new Lenis();
+lenis.on("scroll", ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// 01 — la foto si allarga (sezione ferma mentre si scorre)
+gsap.timeline({ scrollTrigger: { trigger: ".zoom", start: "top top", end: "+=150%", scrub: true, pin: true } })
+  .to(".zoom-img", { clipPath: "inset(0% 0% round 0px)", ease: "none" })
+  .to(".zoom-img img", { scale: 1, ease: "none" }, 0)
+  .from(".zoom h2", { scale: .6, ease: "none" }, 0);
+
+// 02 — la texture scorre dentro le lettere
+const masc = document.getElementById("maschera"), lettere = masc.querySelector("span");
+masc.addEventListener("pointermove", e => {
+  const r = masc.getBoundingClientRect();
+  gsap.to(lettere, { backgroundPosition: `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`, duration: 1.2, ease: "power3.out" });
+});
+gsap.fromTo(lettere, { backgroundSize: "140vw" }, { backgroundSize: "50vw", ease: "none", scrollTrigger: { trigger: masc, scrub: true } });
+
+// 03 — scia di lampade dietro al mouse
+const scia = document.getElementById("scia");
+const foto = ["lampada-corallo", "lampada-rossa", "lampada-cielo", "lampada-magenta", "lampada-pois-chiaro", "lampada-pois-luce", "lampada-pois-rosa"].map(n => `img/${n}.webp`);
+foto.forEach(s => (new Image().src = s)); // precarica
+let ultimo = null, k = 0;
+scia.addEventListener("pointermove", e => {
+  const r = scia.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  if (ultimo && Math.hypot(x - ultimo.x, y - ultimo.y) < 90) return;
+  ultimo = { x, y };
+  const img = document.createElement("img");
+  img.src = foto[k++ % foto.length]; img.alt = "";
+  img.style.left = x + "px"; img.style.top = y + "px";
+  scia.appendChild(img);
+  gsap.timeline({ onComplete: () => img.remove() })
+    .from(img, { scale: .4, rotate: gsap.utils.random(-12, 12), duration: .5, ease: "back.out(2)" })
+    .to(img, { opacity: 0, scale: .8, y: 40, duration: .6, ease: "power2.in" }, .6);
+});
+
+// 04 — nastro: velocità di base + spinta dello scroll
+document.querySelectorAll(".riga").forEach(riga => {
+  const dir = +riga.dataset.dir; let x = 0;
+  gsap.ticker.add(() => {
+    const v = fermo ? 0 : lenis.velocity || 0;
+    x += dir * (0.6 + Math.abs(v) * 0.4);
+    const w = riga.firstElementChild.offsetWidth;
+    x = ((x % w) - w) % w; // ripete senza salti
+    gsap.set(riga, { x, skewX: gsap.utils.clamp(-12, 12, -v * 0.6) });
+  });
+});
+
+// 05 — immagine che segue il cursore sulla lista
+const flu = document.getElementById("fluttua"), fluImg = flu.querySelector("img");
+const fx = gsap.quickTo(flu, "x", { duration: .6, ease: "power3" }), fy = gsap.quickTo(flu, "y", { duration: .6, ease: "power3" });
+const fr = gsap.quickTo(flu, "rotate", { duration: .8, ease: "power3" });
+let px = 0;
+document.querySelectorAll("#lista a").forEach(a => {
+  a.addEventListener("pointerenter", () => { fluImg.src = a.dataset.img; flu.classList.add("on"); });
+  a.addEventListener("pointerleave", () => flu.classList.remove("on"));
+});
+addEventListener("pointermove", e => { fx(e.clientX - 140); fy(e.clientY - 175); fr(gsap.utils.clamp(-15, 15, (e.clientX - px) * .8)); px = e.clientX; });
+
+// 06 — le carte sotto rimpiccioliscono e si scuriscono
+const carte = gsap.utils.toArray(".carta");
+carte.forEach((c, i) => {
+  if (i === carte.length - 1) return;
+  gsap.to(c, { scale: .9 - (carte.length - i) * .01, filter: "brightness(.7)", ease: "none",
+    scrollTrigger: { trigger: carte[i + 1], start: "top bottom", end: "top 20%", scrub: true } });
+});
+
+// 07 — galleria da trascinare con inerzia
+const tr = document.getElementById("trascina"), bin = document.getElementById("binario");
+let pos = 0, vel = 0, presa = false, ux = 0;
+const limite = () => Math.min(0, tr.clientWidth - bin.scrollWidth);
+tr.addEventListener("pointerdown", e => { presa = true; ux = e.clientX; vel = 0; tr.setPointerCapture(e.pointerId); });
+tr.addEventListener("pointermove", e => { if (!presa) return; vel = e.clientX - ux; pos += vel; ux = e.clientX; });
+tr.addEventListener("pointerup", () => (presa = false));
+gsap.ticker.add(() => {
+  if (!presa) { pos += vel; vel *= .94; }
+  const min = limite();
+  if (!presa) pos += (gsap.utils.clamp(min, 0, pos) - pos) * .15; // rientra dolcemente ai bordi
+  gsap.set(bin, { x: pos });
+  bin.querySelectorAll("figure").forEach(f => gsap.set(f, { rotate: gsap.utils.clamp(-6, 6, vel * .3) }));
+});
+
+// 08 — pulsanti magnetici
+if (mouse) document.querySelectorAll(".magnete").forEach(m => {
+  const span = m.querySelector("span");
+  m.addEventListener("pointermove", e => {
+    const r = m.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
+    gsap.to(m, { x: dx * .35, y: dy * .35, duration: .5, ease: "power3.out" });
+    gsap.to(span, { x: dx * .2, y: dy * .2, duration: .5, ease: "power3.out" });
+  });
+  m.addEventListener("pointerleave", () => gsap.to([m, span], { x: 0, y: 0, duration: .9, ease: "elastic.out(1, .4)" }));
+});
+// 08 — testo che si mescola
+const segni = "LOOPBIOPLASTICA#*+-";
+document.querySelectorAll(".mescola").forEach(el => {
+  const vero = el.dataset.testo; let giro;
+  el.addEventListener("pointerenter", () => {
+    let n = 0; clearInterval(giro);
+    giro = setInterval(() => {
+      el.textContent = [...vero].map((c, i) => c === " " || i < n ? c : segni[Math.random() * segni.length | 0]).join("");
+      n += .5; if (n > vero.length) { clearInterval(giro); el.textContent = vero; }
+    }, 30);
+  });
+});
+
+// 09 — lo sfondo prende il colore della sezione
+document.querySelectorAll("[data-sfondo]").forEach(s => {
+  ScrollTrigger.create({ trigger: s, start: "top 50%", end: "bottom 50%",
+    onToggle: self => { if (self.isActive) document.body.style.backgroundColor = s.dataset.sfondo; } });
+  gsap.from(s.querySelector("img"), { y: 120, rotate: -8, scrollTrigger: { trigger: s, scrub: true, end: "center center" } });
+});
+// 10 — interruttore
+document.getElementById("interruttore").addEventListener("click", e => {
+  const on = document.getElementById("buio").classList.toggle("on");
+  e.currentTarget.setAttribute("aria-pressed", on);
+  e.currentTarget.firstElementChild.textContent = on ? "Spegni" : "Accendi";
+});
+
+// 11 — tendine
+document.querySelectorAll(".tendina").forEach((t, i) => {
+  gsap.timeline({ scrollTrigger: { trigger: t, start: "top 85%" }, delay: i * .12 })
+    .to(t, { clipPath: "inset(0% 0 0 0)", duration: 1.2, ease: "power4.inOut" })
+    .to(t.querySelector("img"), { scale: 1, duration: 1.6, ease: "power3.out" }, 0);
+});
+
+// 12 — torcia
+const torcia = document.getElementById("torcia");
+torcia.addEventListener("pointermove", e => {
+  const r = torcia.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * 100, y = (e.clientY - r.top) / r.height * 100;
+  torcia.style.setProperty("--x", x + "%"); torcia.style.setProperty("--y", y + "%");
+  torcia.style.setProperty("--bx", x + "%"); torcia.style.setProperty("--by", y + "%");
+});
+
+// 13 — telecomando
+const tasti = [...document.querySelectorAll("#tele-tasti button")], luce = document.getElementById("tele-luce");
+const premi = b => {
+  luce.style.setProperty("--luce", b.style.getPropertyValue("--c"));
+  gsap.fromTo(luce.querySelector("img"), { scale: .97 }, { scale: 1, duration: .6, ease: "elastic.out(1, .4)" });
+};
+tasti.forEach(b => b.addEventListener("click", () => premi(b)));
+addEventListener("keydown", e => {
+  const b = tasti[+e.key - 1]; if (!b) return;
+  b.classList.add("giu"); premi(b); setTimeout(() => b.classList.remove("giu"), 120);
+});
+
+// 14 — sequenza allo scroll (con le foto vere del montaggio basta cambiare la lista)
+const fotogrammi = [["giallo", "Giallo"], ["arancione", "Arancione"], ["bianco", "Bianco"], ["nero", "Nero"], ["alluminio", "Alluminio"]];
+fotogrammi.forEach(([n]) => (new Image().src = `img/cubo-${n}.webp`));
+const seqImg = document.getElementById("seq-img"), seqNome = document.getElementById("seq-nome");
+ScrollTrigger.create({ trigger: "#sequenza", start: "top top", end: "bottom bottom", onUpdate: s => {
+  const [n, nome] = fotogrammi[Math.min(fotogrammi.length - 1, s.progress * fotogrammi.length | 0)];
+  if (seqNome.textContent !== nome) { seqImg.src = `img/cubo-${n}.webp`; seqNome.textContent = nome; }
+  gsap.set(seqImg, { rotate: (s.progress - .5) * 14 });
+} });
+
+// 15 — mazzetta
+const vent = document.getElementById("ventaglio");
+const campioni = ["marmo", "corallo", "rossa", "pois", "aurora", "bolle", "pois-blu"];
+const carteV = campioni.map(n => {
+  const c = document.createElement("div"); c.className = "campione";
+  c.innerHTML = `<div style="background-image:url(tex/${n}.webp)"></div><small>${n.replace("-", " ")}</small>`;
+  vent.appendChild(c); return c;
+});
+const chiudi = () => carteV.forEach((c, i) => (c.style.transform = `rotate(${(i - 3) * 2}deg)`));
+const apri = () => carteV.forEach((c, i) => (c.style.transform = `rotate(${(i - 3) * 16}deg)`));
+chiudi();
+vent.addEventListener("pointerenter", apri);
+vent.addEventListener("pointerleave", chiudi);
+carteV.forEach((c, i) => c.addEventListener("click", () => {
+  apri(); c.style.transform = `rotate(${(i - 3) * 16}deg) translateY(-90px) scale(1.08)`;
+}));
+ScrollTrigger.create({ trigger: ".mazzetta", start: "top 60%", onEnter: () => { apri(); setTimeout(chiudi, 1200); } });
+
+// 16 — testo che si allunga con la velocità
+const stira = document.getElementById("stira");
+gsap.ticker.add(() => {
+  const v = Math.abs(lenis.velocity || 0);
+  gsap.to(stira, { scaleY: 1 + Math.min(v * .025, .8), duration: .4, overwrite: true });
+});
+
+// 17 — colonne a velocità diverse
+document.querySelectorAll(".colonne div").forEach(c => {
+  gsap.fromTo(c, { y: -c.dataset.v }, { y: +c.dataset.v, ease: "none", scrollTrigger: { trigger: ".colonne", scrub: true } });
+});
+
+// 18 — foto ferma che cambia con il testo
+const divImg = document.getElementById("div-img");
+document.querySelectorAll(".divisa-testi article").forEach(a => {
+  ScrollTrigger.create({ trigger: a, start: "top 55%", end: "bottom 55%", onToggle: s => {
+    a.classList.toggle("on", s.isActive);
+    if (s.isActive && !divImg.src.endsWith(a.dataset.img)) {
+      gsap.to(divImg, { opacity: 0, duration: .2, onComplete: () => { divImg.src = a.dataset.img; gsap.to(divImg, { opacity: 1, duration: .4 }); } });
+    }
+  } });
+});
+
+// 19 — spenta / accesa
+const conf = document.getElementById("confronto");
+const sposta = e => { const r = conf.getBoundingClientRect(); conf.style.setProperty("--p", gsap.utils.clamp(0, 100, (e.clientX - r.left) / r.width * 100) + "%"); };
+let tieni = false;
+conf.addEventListener("pointerdown", e => { tieni = true; sposta(e); });
+addEventListener("pointerup", () => (tieni = false));
+conf.addEventListener("pointermove", e => { if (tieni || mouse) sposta(e); });
+
+// 20 — numeri
+document.querySelectorAll("[data-n]").forEach(b => {
+  const o = { v: 0 };
+  gsap.to(o, { v: +b.dataset.n, duration: 2, ease: "power2.out", scrollTrigger: { trigger: b, start: "top 85%" },
+    onUpdate: () => (b.textContent = Math.round(o.v) + (b.dataset.n === "60" ? "+" : "")) });
+});
+
+// 21 — monta tu la lampada (trascina i pezzi nelle finestre)
+const monta = document.getElementById("monta"), pezzi = document.getElementById("monta-pezzi");
+const finestre = [...monta.querySelectorAll(".finestra")];
+["marmo", "corallo", "aurora", "pois-blu"].forEach(n => {
+  const p = document.createElement("div"); p.className = "pezzo"; p.style.backgroundImage = `url(tex/${n}.webp)`;
+  pezzi.appendChild(p);
+  let sx, sy;
+  p.addEventListener("pointerdown", e => { p.setPointerCapture(e.pointerId); sx = e.clientX; sy = e.clientY; p.style.cursor = "grabbing"; });
+  p.addEventListener("pointermove", e => {
+    if (!p.hasPointerCapture(e.pointerId)) return;
+    gsap.set(p, { x: e.clientX - sx, y: e.clientY - sy, rotate: 4 });
+    finestre.forEach(f => f.classList.toggle("vicina", !f.dataset.piena && dentro(e, f)));
+  });
+  p.addEventListener("pointerup", e => {
+    const f = finestre.find(f => !f.dataset.piena && dentro(e, f));
+    finestre.forEach(f => f.classList.remove("vicina"));
+    if (f) {
+      f.dataset.piena = 1; f.style.backgroundImage = p.style.backgroundImage; f.style.border = "0";
+      gsap.from(f, { scale: 1.15, duration: .5, ease: "back.out(3)" });
+      p.remove();
+      if (finestre.every(f => f.dataset.piena)) monta.classList.add("finita");
+    } else gsap.to(p, { x: 0, y: 0, rotate: 0, duration: .6, ease: "elastic.out(1, .5)" });
+  });
+});
+function dentro(e, el) { const r = el.getBoundingClientRect(); return e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom; }
+
+// 22 — lettere che cadono, con un po' di fisica fatta a mano
+const cad = document.getElementById("cadono");
+const corpi = [...cad.querySelectorAll("span")].map((el, i) => ({ el, x: 0, y: -400 - i * 200, vx: 0, vy: 0, r: 0, vr: 0, i }));
+let partite = false, presaL = null, ult = { x: 0, y: 0 };
+ScrollTrigger.create({ trigger: cad, start: "top 70%", once: true, onEnter: () => (partite = true) });
+const piazza = () => corpi.forEach(c => (c.x = cad.clientWidth * (.12 + c.i * .2)));
+piazza(); addEventListener("resize", piazza);
+corpi.forEach(c => {
+  c.el.addEventListener("pointerdown", e => { presaL = c; c.el.setPointerCapture(e.pointerId); ult = { x: e.clientX, y: e.clientY }; });
+  c.el.addEventListener("pointermove", e => {
+    if (presaL !== c) return;
+    c.vx = e.clientX - ult.x; c.vy = e.clientY - ult.y; c.x += c.vx; c.y += c.vy; ult = { x: e.clientX, y: e.clientY };
+  });
+  c.el.addEventListener("pointerup", () => (presaL = null));
+});
+gsap.ticker.add(() => {
+  if (!partite) return;
+  const W = cad.clientWidth, H = cad.clientHeight;
+  corpi.forEach(c => {
+    const w = c.el.offsetWidth, h = c.el.offsetHeight;
+    if (presaL !== c) {
+      c.vy += 1.1; c.x += c.vx; c.y += c.vy; c.r += c.vr;
+      if (c.y > H - h) { c.y = H - h; c.vy *= -.45; c.vx *= .9; c.vr = c.vx * .5; if (Math.abs(c.vy) < 1.5) c.vy = 0; }
+      if (c.x < 0) { c.x = 0; c.vx *= -.6; }
+      if (c.x > W - w) { c.x = W - w; c.vx *= -.6; }
+      c.vr *= .9;
+    }
+    gsap.set(c.el, { x: c.x, y: c.y, rotate: c.r });
+  });
+});
+
+ScrollTrigger.create({ trigger: ".colori", start: "bottom 50%", onEnter: () => (document.body.style.backgroundColor = ""), onLeaveBack: () => {} });
+ScrollTrigger.create({ trigger: ".colori", start: "top 50%", onLeaveBack: () => (document.body.style.backgroundColor = "") });
+</script>
+</body>
+</html>
